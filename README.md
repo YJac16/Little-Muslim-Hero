@@ -20,11 +20,19 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Deploy (Vercel)
 
-1. Push the project to GitHub.
-2. In [Vercel](https://vercel.com/), **Add New Project** and import the repo.
-3. Use default Next.js settings and deploy.
+1. In [Vercel](https://vercel.com/) → **Add New Project** → import [`YJac16/Little-Muslim-Hero`](https://github.com/YJac16/Little-Muslim-Hero).
+2. Set **Framework Preset** to **Next.js** (Vercel should auto-detect it).
+3. If the UI asks for install / build / output explicitly, use:
 
-No environment variables or database are required.
+| Setting | Value |
+|--------|--------|
+| **Install Command** | `npm install` |
+| **Build Command** | `npm run build` |
+| **Output Directory** | *Leave empty (default)* — do **not** set `.next` or `out`. Next.js deployments on Vercel do not use a custom output folder unless you enable static export (`output: "export"`), which this project does not use. |
+
+4. **Root Directory** — leave default (repository root). No environment variables are required.
+
+After the first deploy, each push to `main` triggers a new production deployment.
 
 ## Assets — add your files
 
