@@ -156,12 +156,12 @@ export function Game() {
         <div className="flex h-full flex-col items-center justify-between bg-gradient-to-b from-cream via-white/40 to-accent/15 px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[max(2rem,env(safe-area-inset-top))]">
           <div className="flex flex-1 flex-col items-center justify-center gap-6">
             <LogoHold onHoldComplete={openParent}>
-              <div className="relative h-32 w-32 sm:h-40 sm:w-40">
+              <div className="relative h-44 w-44 sm:h-56 sm:w-56 max-w-[85vw]">
                 <Image
                   src={IMG.mascot}
-                  alt=""
+                  alt="Little Muslim Hero — a happy young boy in a kufi and thobe"
                   fill
-                  className="object-contain drop-shadow-lg"
+                  className="object-contain object-bottom drop-shadow-lg"
                   priority
                 />
               </div>
