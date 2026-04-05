@@ -12,6 +12,7 @@ import { levels } from "@/lib/levels";
 import { AUDIO, IMG } from "@/lib/media";
 import { playUrl } from "@/lib/audio";
 import { Level } from "@/components/Level";
+import { NasheedBackground } from "@/components/NasheedBackground";
 import { ParentMenu } from "@/components/ParentMenu";
 
 type Screen = "start" | "play" | "end";
@@ -138,6 +139,10 @@ export function Game() {
 
   return (
     <div className="h-[100dvh] max-h-[100dvh] w-full overflow-hidden bg-cream">
+      <NasheedBackground
+        soundEnabled={soundEnabled}
+        active={screen === "play" || screen === "end"}
+      />
       <ParentMenu
         open={parentOpen}
         onClose={closeParent}

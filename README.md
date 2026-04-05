@@ -42,6 +42,7 @@ Place files under `public` so URLs start with `/assets/...`.
 
 | File | Use |
 |------|-----|
+| `nasheed-bg.mp3` | Soft looping background nasheed (play + end screens; respects Sound toggle) |
 | `narration-morning.mp3` | Morning scene prompt |
 | `narration-play.mp3` | Play time prompt |
 | `narration-meal.mp3` | Meal time prompt |

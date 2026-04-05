@@ -4,6 +4,8 @@
  * `public/assets/images/` and `public/assets/audio/`).
  */
 export const AUDIO = {
+  /** Soft looping nasheed during gameplay and celebration (not on title). */
+  nasheedBackground: "/assets/audio/nasheed-bg.mp3",
   previewGood: "/assets/audio/preview-good.mp3",
   previewNeutral: "/assets/audio/preview-neutral.mp3",
   success: "/assets/audio/success.mp3",
