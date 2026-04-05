@@ -21,18 +21,23 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Deploy (Vercel)
 
 1. In [Vercel](https://vercel.com/) → **Add New Project** → import [`YJac16/Little-Muslim-Hero`](https://github.com/YJac16/Little-Muslim-Hero).
-2. Set **Framework Preset** to **Next.js** (Vercel should auto-detect it).
-3. If the UI asks for install / build / output explicitly, use:
+2. **Framework Preset** → **Next.js** (required). Do **not** use “Other” or “Static Site” unless you know what you’re doing.
+3. **Root Directory** → leave empty (repo root). No environment variables.
+4. **Build & Development Settings** → prefer **Override** toggles **off** so Vercel uses defaults. If you overrode them, use:
 
 | Setting | Value |
 |--------|--------|
 | **Install Command** | `npm install` |
 | **Build Command** | `npm run build` |
-| **Output Directory** | *Leave empty (default)* — do **not** set `.next` or `out`. Next.js deployments on Vercel do not use a custom output folder unless you enable static export (`output: "export"`), which this project does not use. |
+| **Output Directory** | **Leave empty** — never set `.next`, `out`, or `public` for this app. |
 
-4. **Root Directory** — leave default (repository root). No environment variables are required.
+This repo includes [`vercel.json`](vercel.json) with install/build commands only (no output folder).
 
 After the first deploy, each push to `main` triggers a new production deployment.
+
+### “404: NOT_FOUND” on `*.vercel.app`
+
+Almost always **wrong framework** or **Output Directory**. In **Project → Settings → General → Build & Development Settings**: set framework to **Next.js**, **clear Output Directory completely**, save, then **Deployments → … → Redeploy** the latest build. Open the **Production** domain from the project overview, not an old deployment URL.
 
 ## Assets — add your files
 
