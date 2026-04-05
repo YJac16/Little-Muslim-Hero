@@ -21,23 +21,23 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Deploy (Vercel)
 
 1. In [Vercel](https://vercel.com/) → **Add New Project** → import [`YJac16/Little-Muslim-Hero`](https://github.com/YJac16/Little-Muslim-Hero).
-2. **Framework Preset** → **Next.js** (required). Do **not** use “Other” or “Static Site” unless you know what you’re doing.
+2. **Framework Preset** → **Next.js** (or **Other** with the commands below — the app is a **static export**).
 3. **Root Directory** → leave empty (repo root). No environment variables.
-4. **Build & Development Settings** → prefer **Override** toggles **off** so Vercel uses defaults. If you overrode them, use:
+4. **Build & Development Settings** — this repo uses **`next.config.ts` → `output: "export"`**, which writes the site to the **`out/`** folder. [`vercel.json`](vercel.json) pins **`outputDirectory`** to **`out`**. Use:
 
 | Setting | Value |
 |--------|--------|
 | **Install Command** | `npm install` |
 | **Build Command** | `npm run build` |
-| **Output Directory** | **Leave empty** — never set `.next`, `out`, or `public` for this app. |
+| **Output Directory** | `out` (must match static export; do **not** use `.next` or `public` alone) |
 
-This repo includes [`vercel.json`](vercel.json) with install/build commands only (no output folder).
+If dashboard overrides conflict, turn overrides **off** so `vercel.json` applies, or set **`out`** manually.
 
 After the first deploy, each push to `main` triggers a new production deployment.
 
 ### “404: NOT_FOUND” on `*.vercel.app`
 
-Almost always **wrong framework** or **Output Directory**. In **Project → Settings → General → Build & Development Settings**: set framework to **Next.js**, **clear Output Directory completely**, save, then **Deployments → … → Redeploy** the latest build. Open the **Production** domain from the project overview, not an old deployment URL.
+Usually **Output Directory** did not match the build (e.g. `.next` or empty while the site is exported to **`out`**). This project **must** publish the **`out`** folder after `npm run build`. Redeploy after pulling latest `main`; in Vercel settings, set **Output Directory** to **`out`** or rely on [`vercel.json`](vercel.json).
 
 ## Assets — add your files
 
