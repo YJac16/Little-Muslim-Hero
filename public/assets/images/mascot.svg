@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" role="img" aria-label="Little Muslim Hero mascot">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffe8f0"/>
+      <stop offset="100%" style="stop-color:#ffd4e3"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="240" fill="none"/>
+  <ellipse cx="100" cy="210" rx="55" ry="12" fill="#4CAF50" opacity="0.2"/>
+  <circle cx="100" cy="118" r="52" fill="#fdbcb4"/>
+  <ellipse cx="100" cy="112" rx="48" ry="44" fill="#f5a89a"/>
+  <circle cx="82" cy="108" r="8" fill="#5d4037"/>
+  <circle cx="118" cy="108" r="8" fill="#5d4037"/>
+  <path d="M88 128 Q100 138 112 128" stroke="#5d4037" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <ellipse cx="100" cy="40" rx="38" ry="22" fill="#fff" stroke="#e0e0e0" stroke-width="2"/>
+  <path d="M72 36h56" stroke="#b0bec5" stroke-width="2"/>
+  <path d="M100 22 L105 35 L118 30 L108 40 L112 54 L100 46 L88 54 L92 40 L82 30 L95 35 Z" fill="#ffe082"/>
+  <rect x="58" y="165" width="84" height="55" rx="12" fill="url(#g)"/>
+  <path d="M58 175 L142 175" stroke="#f8bbd0" stroke-width="2"/>
+  <rect x="48" y="170" width="24" height="60" rx="8" fill="url(#g)"/>
+  <rect x="128" y="170" width="24" height="60" rx="8" fill="url(#g)"/>
+  <ellipse cx="85" cy="228" rx="14" ry="8" fill="#8d6e63"/>
+  <ellipse cx="115" cy="228" rx="14" ry="8" fill="#8d6e63"/>
+</svg>

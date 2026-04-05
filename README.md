@@ -60,21 +60,15 @@ Place files under `public` so URLs start with `/assets/...`.
 
 ### Images (`public/assets/images/`)
 
-| File | Use |
-|------|-----|
-| `mascot.png` | Logo / celebrations |
-| `morning-scene.png` | Morning background |
-| `play-scene.png` | Play time |
-| `meal-scene.png` | Meal time |
-| `helping-scene.png` | Helping time |
-| `bedtime-scene.png` | Bedtime |
-| `morning-good.png`, `morning-neutral.png` | Morning choices |
-| `play-good.png`, `play-neutral.png` | Play choices |
-| `meal-good.png`, `meal-neutral.png` | Meal choices |
-| `helping-good.png`, `helping-neutral.png` | Helping choices |
-| `bedtime-good.png`, `bedtime-neutral.png` | Bedtime choices |
+The repo ships **soft vector (`.svg`) scenes and choices** (no text in artwork — visuals only). Filenames are wired in **`lib/media.ts`**.
 
-Paths are defined in **`lib/media.ts`** — if your filenames differ, update that file so they match what is in `public/assets/`.
+| Files | Use |
+|------|-----|
+| `mascot.svg` | Logo / corner badge / end screen |
+| `*-scene.svg` | One per moment (morning, play, meal, helping, bedtime) |
+| `*-good.svg` / `*-neutral.svg` | Choice tiles per moment |
+
+Swap any file for your own **`.svg`** or change **`lib/media.ts`** to point at **`.png`** / **`.webp`** (no text in toddler tiles).
 
 ## Parent menu
 
