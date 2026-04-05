@@ -92,7 +92,7 @@ export function Game() {
     if (startingRef.current) return;
     startingRef.current = true;
     try {
-      await playUrl(AUDIO.previewGood, soundEnabled, 0.9);
+      await playUrl(AUDIO.uiStart, soundEnabled, 0.9);
       setLevelIndex(0);
       setScreen("play");
     } finally {
@@ -104,7 +104,7 @@ export function Game() {
     if (startingRef.current) return;
     startingRef.current = true;
     try {
-      await playUrl(AUDIO.previewGood, soundEnabled, 0.9);
+      await playUrl(AUDIO.uiStart, soundEnabled, 0.9);
       setLevelIndex(0);
       setScreen("play");
     } finally {
@@ -228,7 +228,7 @@ export function Game() {
           <LogoHold onHoldComplete={openParent}>
             <div className="relative mb-8 h-40 w-40 sm:h-48 sm:w-48">
               <Image
-                src={IMG.mascot}
+                src={IMG.mascotCelebrating}
                 alt=""
                 fill
                 className="object-contain animate-scaleSuccess"

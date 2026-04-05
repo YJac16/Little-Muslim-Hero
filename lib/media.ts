@@ -1,38 +1,51 @@
 /**
- * Paths under `public/` → URLs start with `/assets/...`.
- * If your filenames differ, change them only here (and keep files in
- * `public/assets/images/` and `public/assets/audio/`).
+ * Paths = files in `public/` (URL starts with `/`).
+ * Filenames match what you added at repo root / `public/assets/`.
  */
 export const AUDIO = {
-  /** Soft looping nasheed during gameplay and celebration (not on title). */
   nasheedBackground: "/assets/audio/nasheed-bg.mp3",
-  previewGood: "/assets/audio/preview-good.mp3",
-  previewNeutral: "/assets/audio/preview-neutral.mp3",
-  success: "/assets/audio/success.mp3",
-  retry: "/assets/audio/retry.mp3",
-  narrationMorning: "/assets/audio/narration-morning.mp3",
-  narrationPlay: "/assets/audio/narration-play.mp3",
-  narrationMeal: "/assets/audio/narration-meal.mp3",
-  narrationHelping: "/assets/audio/narration-help.mp3",
-  narrationBed: "/assets/audio/narration-bed.mp3",
+  /** Start / Play Again tap */
+  uiStart: "/Preview-Bismillah.mp3",
+  narrationMorning:
+    "/Morning-Intro-Good-morning-little-hero-When-we-wake-up-what-do-we-say.mp3",
+  narrationPlay:
+    "/Play-Intro-Your-friend-wants-to-play-What-should-we-do.mp3",
+  narrationMeal: "/Meal-Intro-Before-we-eat-what-do-we-say.mp3",
+  narrationHelping:
+    "/Helping-Intro-Mommy-needs-help-What-can-we-do.mp3",
+  narrationBed: "/Bedtime-Intro-Before-we-sleep-we-make-our-dua.mp3",
+  previewAlhamdulilah: "/Preview-Alhamdulilah.mp3",
+  previewBismillah: "/Preview-Bismillah.mp3",
+  previewMine: "/Preview-Mine.mp3",
+  previewShare: "/Preview-Share.mp3",
+  successChime: "/soft-sparkle-chime-for-correct-choices.mp3",
+  retry: "/Gentle-pop-for-retry.mp3",
+  successNarrationMorning:
+    "/Success-MashaAllah-Allah-loves-when-we-remember-Him.mp3",
+  successNarrationPlay: "/Success-Sharing-makes-hearts-happy.mp3",
+  successNarrationMeal: "/Success-Bismillah-brings-barakah.mp3",
+  successNarrationHelping:
+    "/Success-Helping-is-from-good-character.mp3",
+  successNarrationBedtime: "/Success-Sleep-peacefully-little-hero.mp3",
 } as const;
 
-/** Scenes + choices use bundled SVG art; mascot may stay PNG if you add one. */
 export const IMG = {
-  mascot: "/assets/images/mascot.svg",
-  morningScene: "/assets/images/morning-scene.svg",
-  playScene: "/assets/images/play-scene.svg",
-  mealScene: "/assets/images/meal-scene.svg",
-  helpingScene: "/assets/images/helping-scene.svg",
-  bedtimeScene: "/assets/images/bedtime-scene.svg",
-  morningGood: "/assets/images/morning-good.svg",
-  morningNeutral: "/assets/images/morning-neutral.svg",
-  playGood: "/assets/images/play-good.svg",
-  playNeutral: "/assets/images/play-neutral.svg",
-  mealGood: "/assets/images/meal-good.svg",
-  mealNeutral: "/assets/images/meal-neutral.svg",
-  helpingGood: "/assets/images/helping-good.svg",
-  helpingNeutral: "/assets/images/helping-neutral.svg",
-  bedtimeGood: "/assets/images/bedtime-good.svg",
-  bedtimeNeutral: "/assets/images/bedtime-neutral.svg",
+  mascot: "/mascot.png",
+  mascotCelebrating: "/mascot-celebrating-pose.png",
+  morningScene: "/morning-scene.png",
+  playScene: "/play-scene.png",
+  mealScene: "/meal-scene.png",
+  helpingScene: "/helping-scene.png",
+  bedtimeScene: "/bedtime-scene.png",
+  morningGood: "/morning-scene-choice-good.png",
+  morningNeutral: "/morning-scene-choice-neutral.png",
+  playGood: "/play-scene-choice-good.png",
+  playNeutral: "/play-scene-choice-neutral.png",
+  mealGood: "/meal-scene-choice-good.png",
+  mealNeutral: "/meal-scene-choice-neutral.png",
+  helpingGood: "/helping-scene-choice-good.png",
+  helpingNeutral: "/helping-scene-choice-neutral.png",
+  bedtimeGood: "/bedtime-scene-choice-good.png",
+  /** File name uses `bed-time-` per asset on disk */
+  bedtimeNeutral: "/bed-time-scene-choice-neutral.png",
 } as const;

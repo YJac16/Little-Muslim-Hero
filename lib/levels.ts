@@ -11,25 +11,26 @@ export type LevelData = {
   name: string;
   scene: string;
   narration: string;
+  successNarration: string;
   choices: [LevelChoice, LevelChoice];
 };
 
-/** Filenames are defined in `lib/media.ts` (maps to `public/assets/`). */
 export const levels: LevelData[] = [
   {
     id: "morning",
     name: "Morning",
     scene: IMG.morningScene,
     narration: AUDIO.narrationMorning,
+    successNarration: AUDIO.successNarrationMorning,
     choices: [
       {
         image: IMG.morningGood,
-        audio: AUDIO.previewGood,
+        audio: AUDIO.previewAlhamdulilah,
         correct: true,
       },
       {
         image: IMG.morningNeutral,
-        audio: AUDIO.previewNeutral,
+        audio: AUDIO.previewMine,
         correct: false,
       },
     ],
@@ -39,15 +40,16 @@ export const levels: LevelData[] = [
     name: "Play Time",
     scene: IMG.playScene,
     narration: AUDIO.narrationPlay,
+    successNarration: AUDIO.successNarrationPlay,
     choices: [
       {
         image: IMG.playGood,
-        audio: AUDIO.previewGood,
+        audio: AUDIO.previewShare,
         correct: true,
       },
       {
         image: IMG.playNeutral,
-        audio: AUDIO.previewNeutral,
+        audio: AUDIO.previewMine,
         correct: false,
       },
     ],
@@ -57,15 +59,16 @@ export const levels: LevelData[] = [
     name: "Meal Time",
     scene: IMG.mealScene,
     narration: AUDIO.narrationMeal,
+    successNarration: AUDIO.successNarrationMeal,
     choices: [
       {
         image: IMG.mealGood,
-        audio: AUDIO.previewGood,
+        audio: AUDIO.previewBismillah,
         correct: true,
       },
       {
         image: IMG.mealNeutral,
-        audio: AUDIO.previewNeutral,
+        audio: AUDIO.previewMine,
         correct: false,
       },
     ],
@@ -75,15 +78,16 @@ export const levels: LevelData[] = [
     name: "Helping Time",
     scene: IMG.helpingScene,
     narration: AUDIO.narrationHelping,
+    successNarration: AUDIO.successNarrationHelping,
     choices: [
       {
         image: IMG.helpingGood,
-        audio: AUDIO.previewGood,
+        audio: AUDIO.previewShare,
         correct: true,
       },
       {
         image: IMG.helpingNeutral,
-        audio: AUDIO.previewNeutral,
+        audio: AUDIO.previewMine,
         correct: false,
       },
     ],
@@ -93,15 +97,16 @@ export const levels: LevelData[] = [
     name: "Bedtime",
     scene: IMG.bedtimeScene,
     narration: AUDIO.narrationBed,
+    successNarration: AUDIO.successNarrationBedtime,
     choices: [
       {
         image: IMG.bedtimeGood,
-        audio: AUDIO.previewGood,
+        audio: AUDIO.previewAlhamdulilah,
         correct: true,
       },
       {
         image: IMG.bedtimeNeutral,
-        audio: AUDIO.previewNeutral,
+        audio: AUDIO.previewMine,
         correct: false,
       },
     ],

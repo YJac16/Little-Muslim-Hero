@@ -41,7 +41,7 @@ Usually **Output Directory** did not match the build (e.g. `.next` or empty whil
 
 ## Assets — add your files
 
-Place files under `public` so URLs start with `/assets/...`.
+**Images & most voice clips** live next to `public` (URL = `/filename.png` / `/filename.mp3`). **Nasheed** may stay in `public/assets/audio/`. Paths are centralized in **`lib/media.ts`**.
 
 ### Audio (`public/assets/audio/`)
 

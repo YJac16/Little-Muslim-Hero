@@ -87,11 +87,16 @@ export function Level({ level, soundEnabled, onComplete }: LevelProps) {
         setPhase("success");
         setHighlightCorrect(true);
         setSelectedWrongIndex(null);
-        void playUrl(AUDIO.success, soundEnabled, 1);
-        successTimerRef.current = window.setTimeout(() => {
-          successTimerRef.current = null;
-          onComplete();
-        }, 2000);
+        void (async () => {
+          await playUrl(AUDIO.successChime, soundEnabled, 1);
+          if (level.successNarration) {
+            await playUrl(level.successNarration, soundEnabled, 1);
+          }
+          successTimerRef.current = window.setTimeout(() => {
+            successTimerRef.current = null;
+            onComplete();
+          }, 900);
+        })();
         return;
       }
 
@@ -105,7 +110,7 @@ export function Level({ level, soundEnabled, onComplete }: LevelProps) {
       setSelectedWrongIndex(null);
       setPhase("ready");
     },
-    [level.narration, onComplete, soundEnabled],
+    [level.narration, level.successNarration, onComplete, soundEnabled],
   );
 
   const choiceLocked =
