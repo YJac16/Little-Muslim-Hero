@@ -29,33 +29,42 @@ export function ParentMenu({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/35 p-4 sm:items-center"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-[#1b2f23]/45 p-4 backdrop-blur-sm sm:items-center"
       role="dialog"
       aria-modal="true"
       aria-label="Parent menu"
     >
-      <div className="max-h-[90dvh] w-full max-w-md overflow-y-auto rounded-[24px] bg-cream p-6 shadow-soft">
-        <div className="mb-4 flex items-center justify-between gap-2">
-          <h2 className="text-lg font-semibold text-[#2d4a32]">Parent menu</h2>
+      <div className="glass-panel max-h-[90dvh] w-full max-w-md overflow-y-auto rounded-[28px] p-6 shadow-glow">
+        <div className="mb-5 flex items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-primary/70">
+              Parent controls
+            </p>
+            <h2 className="mt-1 font-heading text-3xl text-[#25513d]">
+              Parent Menu
+            </h2>
+          </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full bg-primary/15 px-4 py-2 text-sm font-medium text-[#2d4a32] active:scale-[0.98]"
+            className="rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-[#2d4a32] shadow-soft active:scale-[0.98]"
           >
             Close
           </button>
         </div>
 
-        <p className="mb-3 text-sm text-[#2d4a32]/80">
-          Jump to a part of the day:
+        <p className="storybook-text mb-4 text-sm font-semibold leading-6 text-[#45664e]">
+          Jump to any part of the day, adjust sound, or reset the little hero
+          back to the beginning.
         </p>
+
         <div className="mb-6 grid grid-cols-1 gap-2">
           {SECTIONS.map((label, idx) => (
             <button
               key={label}
               type="button"
               onClick={() => onJumpToSection(idx)}
-              className="rounded-[18px] bg-white py-3 text-left text-base font-medium text-[#2d4a32] shadow-soft active:scale-[0.99] px-4 border border-primary/20"
+              className="rounded-[20px] bg-white/85 px-4 py-3 text-left text-base font-semibold text-[#2d4a32] shadow-soft transition-transform active:scale-[0.99] border border-white/70"
             >
               {label}
             </button>
@@ -66,33 +75,27 @@ export function ParentMenu({
           <button
             type="button"
             onClick={onSoundToggle}
-            className="rounded-[18px] bg-accent/25 py-4 text-center text-base font-semibold text-[#2d4a32] border border-accent/40 active:scale-[0.99]"
+            className="rounded-[20px] bg-gradient-to-r from-[#dff5ff] to-[#eefcff] px-4 py-4 text-center text-base font-bold text-[#2d4a32] border border-accent/35 shadow-softBlue active:scale-[0.99]"
           >
             Sound: {soundEnabled ? "ON" : "OFF"}
           </button>
 
           <button
             type="button"
-            onClick={() => {
-              onReset();
-            }}
-            className="rounded-[18px] bg-primary/20 py-4 text-center text-base font-semibold text-[#2d4a32] border border-primary/35 active:scale-[0.99]"
+            onClick={onReset}
+            className="rounded-[20px] bg-gradient-to-r from-[#eef9eb] to-[#f7fff4] px-4 py-4 text-center text-base font-bold text-[#2d4a32] border border-primary/30 shadow-soft active:scale-[0.99]"
           >
             Reset progress
           </button>
 
-          <div className="rounded-[18px] border border-dashed border-[#2d4a32]/25 bg-white/60 p-4">
-            <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[#2d4a32]/60">
-              PIN lock
+          <div className="rounded-[20px] border border-dashed border-[#2d4a32]/20 bg-white/55 p-4">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#2d4a32]/55">
+              Coming soon
             </p>
-            <input
-              type="password"
-              inputMode="numeric"
-              disabled
-              placeholder="Coming soon"
-              className="w-full rounded-xl border border-[#2d4a32]/15 bg-cream/80 px-3 py-2 text-sm text-[#2d4a32]/50"
-              aria-disabled="true"
-            />
+            <p className="mt-2 text-sm font-semibold leading-6 text-[#45664e]">
+              PIN lock can be added later if you want the parent controls hidden
+              more securely.
+            </p>
           </div>
         </div>
       </div>

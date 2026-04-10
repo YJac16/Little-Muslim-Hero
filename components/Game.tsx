@@ -8,12 +8,12 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { levels } from "@/lib/levels";
-import { AUDIO, IMG } from "@/lib/media";
-import { playUrl } from "@/lib/audio";
 import { Level } from "@/components/Level";
 import { NasheedBackground } from "@/components/NasheedBackground";
 import { ParentMenu } from "@/components/ParentMenu";
+import { playUrl } from "@/lib/audio";
+import { levels } from "@/lib/levels";
+import { AUDIO, IMG } from "@/lib/media";
 
 type Screen = "start" | "play" | "end";
 
@@ -56,6 +56,16 @@ function LogoHold({
       className="touch-manipulation cursor-pointer select-none"
     >
       {children}
+    </div>
+  );
+}
+
+function AmbientBackdrop() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="ambient-orb animate-drift left-[-3rem] top-[10%] h-40 w-40 bg-[#ffd36b]/40" />
+      <div className="ambient-orb animate-drift right-[-2rem] top-[22%] h-44 w-44 bg-[#6ec6ff]/30 [animation-delay:0.8s]" />
+      <div className="ambient-orb animate-drift bottom-[12%] left-[10%] h-32 w-32 bg-[#ffc7b8]/30 [animation-delay:1.2s]" />
     </div>
   );
 }
@@ -136,9 +146,11 @@ export function Game() {
   }, []);
 
   const currentLevel = levels[levelIndex];
+  const progressCount = screen === "end" ? levels.length : levelIndex;
 
   return (
-    <div className="h-[100dvh] max-h-[100dvh] w-full overflow-hidden bg-cream">
+    <div className="relative h-[100dvh] max-h-[100dvh] w-full overflow-hidden bg-cream">
+      <AmbientBackdrop />
       <NasheedBackground
         soundEnabled={soundEnabled}
         active={screen === "play" || screen === "end"}
@@ -153,71 +165,134 @@ export function Game() {
       />
 
       {screen === "start" && (
-        <div className="flex h-full flex-col items-center justify-between bg-gradient-to-b from-cream via-white/40 to-accent/15 px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[max(2rem,env(safe-area-inset-top))]">
-          <div className="flex flex-1 flex-col items-center justify-center gap-6">
-            <LogoHold onHoldComplete={openParent}>
-              <div className="relative h-44 w-44 sm:h-56 sm:w-56 max-w-[85vw]">
-                <Image
-                  src={IMG.mascot}
-                  alt="Little Muslim Hero — a happy young boy in a kufi and thobe"
-                  fill
-                  className="object-contain object-bottom drop-shadow-lg"
-                  priority
-                />
-              </div>
-            </LogoHold>
+        <div className="relative z-10 flex h-full flex-col items-center justify-between px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[max(1.5rem,env(safe-area-inset-top))] sm:px-6">
+          <div className="flex w-full items-center justify-between">
+            <div className="rounded-full bg-white/70 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-primary shadow-softBlue">
+              Little hearts, big barakah
+            </div>
+            <button
+              type="button"
+              onClick={() => persistSound(!soundEnabled)}
+              className="glass-panel rounded-full px-4 py-2 text-sm font-semibold text-[#28503a] shadow-softBlue"
+              aria-label={soundEnabled ? "Turn sound off" : "Turn sound on"}
+            >
+              {soundEnabled ? "Sound On" : "Sound Off"}
+            </button>
+          </div>
 
-            <div className="text-center">
-              <h1 className="text-3xl font-extrabold tracking-tight text-primary sm:text-4xl">
-                Little Muslim Hero
-              </h1>
-              <p className="mt-2 text-xl font-semibold text-accent sm:text-2xl">
-                My Barakah Day
-              </p>
+          <div className="flex w-full flex-1 flex-col items-center justify-center gap-6">
+            <div className="glass-panel relative w-full max-w-2xl overflow-hidden rounded-[32px] px-6 py-8 shadow-glow sm:px-10">
+              <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#fff2c8]/80 to-transparent" />
+              <div className="absolute -right-8 top-8 h-24 w-24 rounded-full bg-[#6ec6ff]/20 blur-xl" />
+              <div className="absolute -left-8 bottom-8 h-24 w-24 rounded-full bg-[#ffd36b]/25 blur-xl" />
+
+              <div className="relative flex flex-col items-center gap-5 text-center">
+                <LogoHold onHoldComplete={openParent}>
+                  <div className="relative h-44 w-44 animate-floatGentle sm:h-56 sm:w-56">
+                    <div className="absolute inset-4 rounded-full bg-[#ffd36b]/25 blur-2xl" />
+                    <Image
+                      src={IMG.mascot}
+                      alt="Little Muslim Hero mascot"
+                      fill
+                      className="object-contain object-bottom drop-shadow-lg"
+                      priority
+                    />
+                  </div>
+                </LogoHold>
+
+                <div className="space-y-3">
+                  <p className="font-heading text-sm uppercase tracking-[0.3em] text-primary/80">
+                    A gentle Islamic routine game
+                  </p>
+                  <h1 className="storybook-text font-heading text-4xl leading-none text-[#25513d] sm:text-6xl">
+                    Little Muslim Hero
+                  </h1>
+                  <p className="font-heading text-2xl text-[#ef8b48] sm:text-3xl">
+                    My Barakah Day
+                  </p>
+                  <p className="storybook-text mx-auto max-w-xl text-base font-semibold leading-7 text-[#3a5f47] sm:text-lg">
+                    Tap through morning, play, meals, helping, and bedtime with
+                    warm voices, happy choices, and a softer storybook feel.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() => void startGame()}
-            className="mb-2 w-full max-w-md rounded-[24px] bg-primary py-5 text-2xl font-bold text-white shadow-soft active:scale-[0.99] min-h-[120px] border border-white/30"
-          >
-            Start
-          </button>
+          <div className="z-10 w-full max-w-md space-y-3">
+            <button
+              type="button"
+              onClick={() => void startGame()}
+              className="w-full rounded-[28px] bg-gradient-to-r from-primary to-[#5bcf72] px-6 py-5 text-2xl font-bold text-white shadow-soft transition-transform active:scale-[0.99] min-h-[108px] border border-white/40"
+            >
+              Start the Day
+            </button>
+            <p className="text-center text-sm font-semibold text-[#44664d]">
+              Press and hold the mascot for the parent menu
+            </p>
+          </div>
         </div>
       )}
 
       {screen === "play" && currentLevel && (
-        <div className="relative h-full">
-          <div className="absolute left-2 top-[max(0.5rem,env(safe-area-inset-top))] z-10">
+        <div className="relative z-10 h-full">
+          <div className="absolute inset-x-0 top-[max(0.5rem,env(safe-area-inset-top))] z-10 flex items-start justify-between px-3 sm:px-4">
             <LogoHold onHoldComplete={openParent}>
-              <div className="relative h-14 w-14 rounded-2xl bg-white/85 p-1 shadow-softBlue border border-primary/15">
+              <div className="glass-panel relative h-14 w-14 rounded-2xl p-1 shadow-softBlue">
                 <Image
                   src={IMG.mascot}
-                  alt=""
+                  alt="Open parent menu"
                   fill
                   className="object-contain p-0.5"
                 />
               </div>
             </LogoHold>
+
+            <div className="glass-panel rounded-full px-4 py-2 shadow-softBlue">
+              <p className="text-xs font-bold uppercase tracking-[0.26em] text-primary/80">
+                Progress
+              </p>
+              <div className="mt-2 flex items-center gap-2">
+                {levels.map((level, index) => {
+                  const active = index === levelIndex;
+                  const complete = index < progressCount;
+                  return (
+                    <span
+                      key={level.id}
+                      className={[
+                        "h-2.5 rounded-full transition-all",
+                        active ? "w-9 bg-[#ef8b48]" : "w-2.5",
+                        complete && !active ? "bg-primary" : "",
+                        !complete && !active ? "bg-primary/20" : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                    />
+                  );
+                })}
+              </div>
+            </div>
           </div>
+
           <Level
             key={currentLevel.id}
             level={currentLevel}
             soundEnabled={soundEnabled}
+            levelIndex={levelIndex}
+            totalLevels={levels.length}
             onComplete={onLevelComplete}
           />
         </div>
       )}
 
       {screen === "end" && (
-        <div className="flex h-full flex-col items-center justify-center bg-gradient-to-b from-cream to-primary/10 px-6 text-center safe-pb pt-[max(1rem,env(safe-area-inset-top))]">
-          <div className="absolute left-2 top-[max(0.5rem,env(safe-area-inset-top))] z-10">
+        <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center safe-pb pt-[max(1rem,env(safe-area-inset-top))]">
+          <div className="absolute left-3 top-[max(0.5rem,env(safe-area-inset-top))] z-10">
             <LogoHold onHoldComplete={openParent}>
-              <div className="relative h-14 w-14 rounded-2xl bg-white/85 p-1 shadow-softBlue border border-primary/15">
+              <div className="glass-panel relative h-14 w-14 rounded-2xl p-1 shadow-softBlue">
                 <Image
                   src={IMG.mascot}
-                  alt=""
+                  alt="Open parent menu"
                   fill
                   className="object-contain p-0.5"
                 />
@@ -225,25 +300,37 @@ export function Game() {
             </LogoHold>
           </div>
 
-          <LogoHold onHoldComplete={openParent}>
-            <div className="relative mb-8 h-40 w-40 sm:h-48 sm:w-48">
-              <Image
-                src={IMG.mascotCelebrating}
-                alt=""
-                fill
-                className="object-contain animate-scaleSuccess"
-              />
-            </div>
-          </LogoHold>
+          <div className="glass-panel relative w-full max-w-xl rounded-[32px] px-6 py-10 shadow-glow">
+            <div className="absolute inset-x-0 top-0 h-24 rounded-t-[32px] bg-gradient-to-b from-[#fff0bb]/80 to-transparent" />
 
-          <p className="mb-10 max-w-md text-2xl font-bold leading-snug text-[#2d4a32] sm:text-3xl">
-            MashaAllah! You completed your day!
-          </p>
+            <LogoHold onHoldComplete={openParent}>
+              <div className="relative mx-auto mb-6 h-40 w-40 sm:h-48 sm:w-48">
+                <div className="absolute inset-4 rounded-full bg-[#ffd36b]/30 blur-2xl" />
+                <Image
+                  src={IMG.mascotCelebrating}
+                  alt="Celebrating Little Muslim Hero"
+                  fill
+                  className="object-contain animate-scaleSuccess"
+                />
+              </div>
+            </LogoHold>
+
+            <p className="font-heading text-sm uppercase tracking-[0.26em] text-primary/80">
+              Day complete
+            </p>
+            <h2 className="storybook-text mt-3 font-heading text-4xl leading-tight text-[#25513d] sm:text-5xl">
+              MashaAllah, you completed your day!
+            </h2>
+            <p className="storybook-text mx-auto mt-4 max-w-md text-base font-semibold leading-7 text-[#45664e]">
+              The little hero remembered Allah, shared with kindness, and ended
+              the day with calm hearts.
+            </p>
+          </div>
 
           <button
             type="button"
             onClick={() => void playAgain()}
-            className="w-full max-w-md rounded-[24px] bg-accent py-5 text-xl font-bold text-white shadow-softBlue active:scale-[0.99] min-h-[120px] border border-white/30"
+            className="mt-8 w-full max-w-md rounded-[28px] bg-gradient-to-r from-[#5cbff5] to-[#7ad2ff] px-6 py-5 text-xl font-bold text-white shadow-softBlue transition-transform active:scale-[0.99] min-h-[108px] border border-white/40"
           >
             Play Again
           </button>

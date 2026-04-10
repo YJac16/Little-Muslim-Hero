@@ -42,24 +42,34 @@ export function ChoiceButton({
       disabled={disabled || isActing}
       aria-label={isCorrect ? "Good choice" : "Try another choice"}
       className={[
-        "relative flex min-h-[120px] flex-1 select-none items-center justify-center overflow-hidden rounded-[22px] border-4 transition-transform duration-200",
-        "border-primary/35 bg-white/90 shadow-soft active:scale-[0.98]",
-        isHighlighted ? "ring-4 ring-accent ring-offset-2 ring-offset-cream scale-[1.02]" : "",
+        "glass-panel group relative flex min-h-[172px] select-none items-center justify-center overflow-hidden rounded-[28px] border transition-all duration-200 sm:min-h-[196px]",
+        "border-white/60 px-4 py-4 shadow-softBlue active:scale-[0.985]",
+        isHighlighted
+          ? "scale-[1.01] ring-4 ring-[#ffd36b] ring-offset-2 ring-offset-cream"
+          : "",
         shouldShake ? "animate-bounceRetry" : "",
-        disabled || isActing ? "opacity-70" : "",
+        disabled || isActing ? "opacity-75" : "hover:-translate-y-0.5",
       ]
         .filter(Boolean)
         .join(" ")}
     >
-      <div className="relative h-[min(28vh,200px)] w-full">
-        <Image
-          src={image}
-          alt=""
-          fill
-          className="object-contain p-2"
-          sizes="(max-width: 768px) 45vw, 200px"
-          priority={false}
-        />
+      <div className="absolute inset-x-6 top-4 h-10 rounded-full bg-gradient-to-r from-[#ffd36b]/30 to-[#6ec6ff]/25 blur-md" />
+      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white/45 to-transparent" />
+
+      <div className="relative flex w-full flex-col items-center justify-center gap-3">
+        <div className="relative h-[min(23vh,180px)] w-full">
+          <Image
+            src={image}
+            alt=""
+            fill
+            className="object-contain p-2 transition-transform duration-200 group-active:scale-[0.98]"
+            sizes="(max-width: 640px) 90vw, 42vw"
+            priority={false}
+          />
+        </div>
+        <div className="rounded-full bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#3f674a] shadow-soft">
+          Tap to hear
+        </div>
       </div>
     </button>
   );

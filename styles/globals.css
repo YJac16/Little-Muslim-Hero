@@ -6,6 +6,9 @@
   --bg-cream: #fff8e7;
   --primary: #4caf50;
   --accent: #6ec6ff;
+  --ink: #21412b;
+  --gold: #ffd36b;
+  --rose: #ffdfd0;
 }
 
 html,
@@ -18,13 +21,56 @@ body {
 }
 
 body {
-  background: var(--bg-cream);
-  color: #2d4a32;
+  background:
+    radial-gradient(circle at top, rgba(255, 236, 179, 0.85), transparent 32%),
+    linear-gradient(180deg, #fffdf7 0%, #fff8e7 45%, #f4fbff 100%);
+  color: var(--ink);
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 999px;
+  filter: blur(14px);
+  opacity: 0.75;
+}
+
+body::before {
+  top: 5vh;
+  left: -3rem;
+  width: 12rem;
+  height: 12rem;
+  background: radial-gradient(circle, rgba(255, 211, 107, 0.42), transparent 68%);
+}
+
+body::after {
+  right: -2rem;
+  bottom: 12vh;
+  width: 14rem;
+  height: 14rem;
+  background: radial-gradient(circle, rgba(110, 198, 255, 0.28), transparent 72%);
 }
 
 @layer utilities {
   .safe-pb {
     padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .glass-panel {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0.7)
+    );
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(16px);
+  }
+
+  .storybook-text {
+    text-wrap: balance;
   }
 }
 
@@ -37,6 +83,13 @@ body {
   opacity: 0;
   animation: sparkleFloat 1.2s ease-out forwards;
   pointer-events: none;
+}
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+  filter: blur(10px);
 }
 
 @keyframes sparkleFloat {

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Nunito } from "next/font/google";
+import { Baloo_2, Nunito } from "next/font/google";
 import "@/styles/globals.css";
 
 const nunito = Nunito({
@@ -8,10 +8,16 @@ const nunito = Nunito({
   display: "swap",
 });
 
+const baloo = Baloo_2({
+  subsets: ["latin"],
+  variable: "--font-baloo",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "Little Muslim Hero — My Barakah Day",
+  title: "Little Muslim Hero - My Barakah Day",
   description:
-    "A gentle, choice-based daily routine for little Muslims (ages 2–4).",
+    "A gentle, choice-based daily routine for little Muslims (ages 2-4).",
   manifest: "/manifest.webmanifest",
 };
 
@@ -28,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={nunito.variable}>
+    <html lang="en" className={`${nunito.variable} ${baloo.variable}`}>
       <body className="min-h-[100dvh] font-display antialiased">{children}</body>
     </html>
   );

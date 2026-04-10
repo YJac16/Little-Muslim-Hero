@@ -15,15 +15,19 @@ export default {
       },
       fontFamily: {
         display: ["var(--font-nunito)", "system-ui", "sans-serif"],
+        heading: ["var(--font-baloo)", "var(--font-nunito)", "sans-serif"],
       },
       boxShadow: {
         soft: "0 8px 24px rgba(76, 175, 80, 0.2)",
         softBlue: "0 8px 24px rgba(110, 198, 255, 0.25)",
+        glow: "0 20px 60px rgba(255, 184, 77, 0.18)",
       },
       animation: {
         sparkle: "sparkle 0.6s ease-out forwards",
         bounceRetry: "bounceRetry 0.5s ease-in-out",
         scaleSuccess: "scaleSuccess 0.35s ease-out",
+        floatGentle: "floatGentle 4.5s ease-in-out infinite",
+        drift: "drift 14s ease-in-out infinite alternate",
       },
       keyframes: {
         sparkle: {
@@ -39,6 +43,14 @@ export default {
           "0%": { transform: "scale(1)" },
           "50%": { transform: "scale(1.04)" },
           "100%": { transform: "scale(1)" },
+        },
+        floatGentle: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        drift: {
+          "0%": { transform: "translate3d(-8px, 0px, 0px) scale(1)" },
+          "100%": { transform: "translate3d(10px, -14px, 0px) scale(1.05)" },
         },
       },
     },
