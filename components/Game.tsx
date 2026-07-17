@@ -236,9 +236,9 @@ export function Game() {
 
       {screen === "play" && currentLevel && (
         <div className="relative z-10 h-full">
-          <div className="absolute inset-x-0 top-[max(0.5rem,env(safe-area-inset-top))] z-10 flex items-start justify-between px-3 sm:px-4">
+          <div className="absolute inset-x-0 top-[max(0.4rem,env(safe-area-inset-top))] z-20 flex items-center justify-between px-2.5 sm:px-4">
             <LogoHold onHoldComplete={openParent}>
-              <div className="glass-panel relative h-14 w-14 rounded-2xl p-1 shadow-softBlue">
+              <div className="glass-panel relative h-12 w-12 rounded-2xl p-1 shadow-softBlue sm:h-14 sm:w-14">
                 <Image
                   src={IMG.mascot}
                   alt="Open parent menu"
@@ -248,29 +248,24 @@ export function Game() {
               </div>
             </LogoHold>
 
-            <div className="glass-panel rounded-full px-4 py-2 shadow-softBlue">
-              <p className="text-xs font-bold uppercase tracking-[0.26em] text-primary/80">
-                Progress
-              </p>
-              <div className="mt-2 flex items-center gap-2">
-                {levels.map((level, index) => {
-                  const active = index === levelIndex;
-                  const complete = index < progressCount;
-                  return (
-                    <span
-                      key={level.id}
-                      className={[
-                        "h-2.5 rounded-full transition-all",
-                        active ? "w-9 bg-[#ef8b48]" : "w-2.5",
-                        complete && !active ? "bg-primary" : "",
-                        !complete && !active ? "bg-primary/20" : "",
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
-                    />
-                  );
-                })}
-              </div>
+            <div className="glass-panel flex items-center gap-2 rounded-full px-3 py-2 shadow-softBlue">
+              {levels.map((level, index) => {
+                const active = index === levelIndex;
+                const complete = index < progressCount;
+                return (
+                  <span
+                    key={level.id}
+                    className={[
+                      "h-2 rounded-full transition-all",
+                      active ? "w-7 bg-[#ef8b48]" : "w-2",
+                      complete && !active ? "bg-primary" : "",
+                      !complete && !active ? "bg-primary/20" : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                  />
+                );
+              })}
             </div>
           </div>
 

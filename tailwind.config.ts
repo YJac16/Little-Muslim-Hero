@@ -24,7 +24,7 @@ export default {
       },
       animation: {
         sparkle: "sparkle 0.6s ease-out forwards",
-        bounceRetry: "bounceRetry 0.5s ease-in-out",
+        bounceRetry: "bounceRetry 0.55s ease-in-out",
         scaleSuccess: "scaleSuccess 0.35s ease-out",
         floatGentle: "floatGentle 4.5s ease-in-out infinite",
         drift: "drift 14s ease-in-out infinite alternate",
@@ -35,9 +35,13 @@ export default {
           "100%": { opacity: "1", transform: "scale(1)" },
         },
         bounceRetry: {
-          "0%, 100%": { transform: "translateX(0)" },
-          "25%": { transform: "translateX(-8px)" },
-          "75%": { transform: "translateX(8px)" },
+          "0%, 100%": { transform: "translateX(0) rotate(0deg)" },
+          "15%": { transform: "translateX(-12px) rotate(-2deg)" },
+          "30%": { transform: "translateX(12px) rotate(2deg)" },
+          "45%": { transform: "translateX(-10px) rotate(-1.5deg)" },
+          "60%": { transform: "translateX(10px) rotate(1.5deg)" },
+          "75%": { transform: "translateX(-6px) rotate(-1deg)" },
+          "90%": { transform: "translateX(6px) rotate(1deg)" },
         },
         scaleSuccess: {
           "0%": { transform: "scale(1)" },

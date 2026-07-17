@@ -24,23 +24,11 @@ type LevelProps = {
   onComplete: () => void;
 };
 
-const phaseCopy: Record<Phase, { badge: string; hint: string }> = {
-  narration: {
-    badge: "Listen",
-    hint: "A warm voice is guiding the little hero right now.",
-  },
-  ready: {
-    badge: "Choose",
-    hint: "Tap the picture that shows the best adab for this moment.",
-  },
-  success: {
-    badge: "MashaAllah",
-    hint: "Beautiful choice. Let the celebration play before the next scene.",
-  },
-  retry: {
-    badge: "Try again",
-    hint: "A gentle pop means we can look again and choose the kinder action.",
-  },
+const phaseBadge: Record<Phase, string> = {
+  narration: "Listen",
+  ready: "Choose",
+  success: "MashaAllah",
+  retry: "Try again",
 };
 
 export function Level({
@@ -116,13 +104,10 @@ export function Level({
         setSelectedWrongIndex(null);
         void (async () => {
           await playUrl(AUDIO.successChime, soundEnabled, 1);
-          if (level.successNarration) {
-            await playUrl(level.successNarration, soundEnabled, 1);
-          }
           successTimerRef.current = window.setTimeout(() => {
             successTimerRef.current = null;
             onComplete();
-          }, 900);
+          }, 700);
         })();
         return;
       }
@@ -132,22 +117,21 @@ export function Level({
       setSelectedWrongIndex(index);
       setShakeWrong(true);
       await playUrl(AUDIO.retry, soundEnabled, 1);
-      await new Promise((resolve) => setTimeout(resolve, 520));
+      await new Promise((resolve) => setTimeout(resolve, 480));
       setShakeWrong(false);
       setSelectedWrongIndex(null);
       setPhase("ready");
     },
-    [level.narration, level.successNarration, onComplete, soundEnabled],
+    [level.narration, onComplete, soundEnabled],
   );
 
   const choiceLocked =
     phase === "narration" || phase === "success" || phase === "retry";
   const showSparkles = phase === "success";
-  const copy = phaseCopy[phase];
 
   return (
     <div
-      className="flex h-full max-h-[100dvh] flex-col px-3 pb-[max(1rem,env(safe-area-inset-bottom))] pt-[max(4.6rem,env(safe-area-inset-top))] sm:px-4"
+      className="flex h-full max-h-[100dvh] flex-col pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-[max(4.25rem,env(safe-area-inset-top))]"
       role="region"
       aria-labelledby={`${id}-scene`}
     >
@@ -155,59 +139,47 @@ export function Level({
         {level.name}
       </span>
 
-      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-3">
-        <div className="glass-panel rounded-[26px] px-4 py-3 shadow-softBlue sm:px-5">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.25em] text-primary/70">
-                Scene {levelIndex + 1} of {totalLevels}
-              </p>
-              <h2 className="font-heading text-2xl text-[#24513c] sm:text-3xl">
+      <div className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col gap-2 px-2 sm:gap-3 sm:px-4">
+        <div
+          className={[
+            "relative min-h-0 flex-1 overflow-hidden rounded-[24px] bg-black/5 shadow-glow sm:rounded-[28px]",
+            showSparkles ? "animate-scaleSuccess" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          <Image
+            src={level.scene}
+            alt={`${level.name} story scene`}
+            fill
+            className="object-cover object-center sm:object-contain"
+            sizes="100vw"
+            priority
+          />
+
+          <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-2.5 sm:p-3">
+            <div className="rounded-full bg-black/35 px-3 py-1.5 backdrop-blur-sm">
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white">
                 {level.name}
-              </h2>
-            </div>
-            <div className="rounded-full bg-white/75 px-4 py-2 text-right shadow-soft">
-              <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#ef8b48]">
-                {copy.badge}
+                <span className="ml-2 opacity-80">
+                  {levelIndex + 1}/{totalLevels}
+                </span>
               </p>
-              <p className="storybook-text mt-1 max-w-[18rem] text-sm font-semibold text-[#45664e]">
-                {copy.hint}
+            </div>
+            <div className="rounded-full bg-black/35 px-3 py-1.5 backdrop-blur-sm">
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#ffe7a3]">
+                {phaseBadge[phase]}
               </p>
             </div>
           </div>
+
+          {showSparkles && <SparkleOverlay />}
         </div>
 
-        <div className="min-h-0 flex-1">
-          <div
-            className={[
-              "glass-panel relative mx-auto flex h-full max-h-[54vh] w-full max-w-5xl overflow-hidden rounded-[30px] p-3 shadow-glow",
-              showSparkles ? "animate-scaleSuccess" : "",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-          >
-            <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/80 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#6ec6ff]/10 to-transparent" />
-            <div className="relative h-full w-full overflow-hidden rounded-[24px] bg-white/55">
-              <Image
-                src={level.scene}
-                alt={`${level.name} story scene`}
-                fill
-                className="object-contain"
-                sizes="100vw"
-                priority
-              />
-              {showSparkles && <SparkleOverlay />}
-            </div>
-          </div>
-        </div>
-
-        <div className="grid w-full grid-cols-1 gap-3 pb-1 sm:grid-cols-2">
+        <div className="grid shrink-0 grid-cols-2 gap-2 pb-1 sm:gap-3 sm:pb-2">
           <ChoiceButton
             image={level.choices[0].image}
-            audio={level.choices[0].audio}
             isCorrect={level.choices[0].correct}
-            soundEnabled={soundEnabled}
             disabled={choiceLocked}
             isHighlighted={highlightCorrect && level.choices[0].correct}
             shouldShake={shakeWrong && selectedWrongIndex === 0}
@@ -215,9 +187,7 @@ export function Level({
           />
           <ChoiceButton
             image={level.choices[1].image}
-            audio={level.choices[1].audio}
             isCorrect={level.choices[1].correct}
-            soundEnabled={soundEnabled}
             disabled={choiceLocked}
             isHighlighted={highlightCorrect && level.choices[1].correct}
             shouldShake={shakeWrong && selectedWrongIndex === 1}
@@ -241,7 +211,7 @@ function SparkleOverlay() {
 
   return (
     <div
-      className="pointer-events-none absolute inset-0 animate-sparkle rounded-[24px] bg-gradient-to-b from-accent/20 to-transparent"
+      className="pointer-events-none absolute inset-0 animate-sparkle bg-gradient-to-b from-accent/20 to-transparent"
       aria-hidden
     >
       {dots.map((dot) => (
