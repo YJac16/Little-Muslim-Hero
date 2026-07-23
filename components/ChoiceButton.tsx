@@ -36,7 +36,8 @@ export function ChoiceButton({
       disabled={disabled || isActing}
       aria-label={isCorrect ? "Good choice" : "Try another choice"}
       className={[
-        "group relative aspect-[4/3] w-full select-none overflow-hidden rounded-[22px] border border-white/70 bg-white/55 shadow-softBlue transition-all duration-200",
+        "group relative min-h-[96px] w-full select-none overflow-hidden rounded-[22px] border border-white/70 bg-white/55 shadow-softBlue transition-all duration-200 touch-manipulation",
+        "aspect-[4/3] landscape:aspect-[5/4] landscape:min-h-[88px] sm:min-h-[108px]",
         "active:scale-[0.97]",
         isHighlighted
           ? "scale-[1.02] ring-4 ring-[#ffd36b] ring-offset-2 ring-offset-cream"

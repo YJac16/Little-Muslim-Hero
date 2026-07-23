@@ -8,6 +8,10 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        short: { raw: "(max-height: 700px)" },
+        tall: { raw: "(min-height: 701px)" },
+      },
       colors: {
         cream: "#FFF8E7",
         primary: "#4CAF50",

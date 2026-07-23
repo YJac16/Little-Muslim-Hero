@@ -32,6 +32,9 @@ export const AUDIO = {
 export const IMG = {
   mascot: "/mascot.png",
   mascotCelebrating: "/mascot-celebrating-pose.png",
+  mascotHappy: "/mascot-happy-face.png",
+  mascotConfused: "/mascot-confused.png",
+  mascotNeutral: "/mascot-neutral-face.png",
   morningScene: "/morning-scene.png",
   playScene: "/play-scene.png",
   mealScene: "/meal-scene.png",

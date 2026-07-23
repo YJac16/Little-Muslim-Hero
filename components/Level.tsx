@@ -12,7 +12,7 @@ import {
 import { ChoiceButton } from "@/components/ChoiceButton";
 import { playUrl, stopUrl } from "@/lib/audio";
 import type { LevelData } from "@/lib/levels";
-import { AUDIO } from "@/lib/media";
+import { AUDIO, IMG } from "@/lib/media";
 
 type Phase = "narration" | "ready" | "success" | "retry";
 
@@ -63,6 +63,10 @@ export function Level({
         window.clearTimeout(successTimerRef.current);
         successTimerRef.current = null;
       }
+      stopUrl(level.narration);
+      stopUrl(level.successNarration);
+      stopUrl(level.choices[0].audio);
+      stopUrl(level.choices[1].audio);
     };
   }, [level]);
 
@@ -96,42 +100,52 @@ export function Level({
       if (currentPhase !== "ready" && currentPhase !== "retry") return;
       if (completedRef.current) return;
 
+      const choice = level.choices[index];
+      stopUrl(level.narration);
+
       if (correct) {
         completedRef.current = true;
-        stopUrl(level.narration);
         setPhase("success");
         setHighlightCorrect(true);
         setSelectedWrongIndex(null);
         void (async () => {
+          await playUrl(choice.audio, soundEnabled, 0.95);
           await playUrl(AUDIO.successChime, soundEnabled, 1);
+          await playUrl(level.successNarration, soundEnabled, 1);
           successTimerRef.current = window.setTimeout(() => {
             successTimerRef.current = null;
             onComplete();
-          }, 700);
+          }, 420);
         })();
         return;
       }
 
-      stopUrl(level.narration);
       setPhase("retry");
       setSelectedWrongIndex(index);
       setShakeWrong(true);
+      await playUrl(choice.audio, soundEnabled, 0.95);
       await playUrl(AUDIO.retry, soundEnabled, 1);
-      await new Promise((resolve) => setTimeout(resolve, 480));
+      await new Promise((resolve) => setTimeout(resolve, 360));
       setShakeWrong(false);
       setSelectedWrongIndex(null);
       setPhase("ready");
     },
-    [level.narration, onComplete, soundEnabled],
+    [level, onComplete, soundEnabled],
   );
 
   const choiceLocked =
     phase === "narration" || phase === "success" || phase === "retry";
   const showSparkles = phase === "success";
+  const emotionSrc =
+    phase === "success"
+      ? IMG.mascotHappy
+      : phase === "retry"
+        ? IMG.mascotConfused
+        : null;
 
   return (
     <div
-      className="flex h-full max-h-[100dvh] flex-col pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-[max(4.25rem,env(safe-area-inset-top))]"
+      className="flex h-full max-h-[100dvh] flex-col pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-[max(3.75rem,env(safe-area-inset-top))] landscape:pt-[max(3.25rem,env(safe-area-inset-top))]"
       role="region"
       aria-labelledby={`${id}-scene`}
     >
@@ -139,10 +153,12 @@ export function Level({
         {level.name}
       </span>
 
-      <div className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col gap-2 px-2 sm:gap-3 sm:px-4">
+      <div className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col gap-2 px-2 sm:gap-3 sm:px-4 landscape:flex-row landscape:items-stretch landscape:gap-3 landscape:px-3">
         <div
           className={[
             "relative min-h-0 flex-1 overflow-hidden rounded-[24px] bg-black/5 shadow-glow sm:rounded-[28px]",
+            "landscape:min-h-0 landscape:basis-[58%]",
+            "short:min-h-[38%] short:flex-[0.9]",
             showSparkles ? "animate-scaleSuccess" : "",
           ]
             .filter(Boolean)
@@ -152,18 +168,15 @@ export function Level({
             src={level.scene}
             alt={`${level.name} story scene`}
             fill
-            className="object-cover object-center sm:object-contain"
+            className="object-contain object-center short:object-cover landscape:object-contain"
             sizes="100vw"
             priority
           />
 
-          <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-2.5 sm:p-3">
+          <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-2 sm:p-3">
             <div className="rounded-full bg-black/35 px-3 py-1.5 backdrop-blur-sm">
               <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white">
-                {level.name}
-                <span className="ml-2 opacity-80">
-                  {levelIndex + 1}/{totalLevels}
-                </span>
+                {levelIndex + 1}/{totalLevels}
               </p>
             </div>
             <div className="rounded-full bg-black/35 px-3 py-1.5 backdrop-blur-sm">
@@ -173,10 +186,21 @@ export function Level({
             </div>
           </div>
 
+          {emotionSrc && (
+            <div className="pointer-events-none absolute bottom-2 right-2 h-16 w-16 animate-scaleSuccess sm:h-20 sm:w-20 landscape:h-14 landscape:w-14">
+              <Image
+                src={emotionSrc}
+                alt=""
+                fill
+                className="object-contain drop-shadow-lg"
+              />
+            </div>
+          )}
+
           {showSparkles && <SparkleOverlay />}
         </div>
 
-        <div className="grid shrink-0 grid-cols-2 gap-2 pb-1 sm:gap-3 sm:pb-2">
+        <div className="grid shrink-0 grid-cols-2 gap-2 pb-1 sm:gap-3 sm:pb-2 landscape:basis-[42%] landscape:content-center landscape:gap-2.5 landscape:pb-0 landscape:self-center">
           <ChoiceButton
             image={level.choices[0].image}
             isCorrect={level.choices[0].correct}

@@ -18,26 +18,49 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Deploy (Vercel)
+## Deploy — Cursor ↔ GitHub ↔ Vercel
 
-1. In [Vercel](https://vercel.com/) → **Add New Project** → import [`YJac16/Little-Muslim-Hero`](https://github.com/YJac16/Little-Muslim-Hero).
-2. **Framework Preset** → **Next.js** (or **Other** with the commands below — the app is a **static export**).
-3. **Root Directory** → leave empty (repo root). No environment variables.
-4. **Build & Development Settings** — this repo uses **`next.config.ts` → `output: "export"`**, which writes the site to the **`out/`** folder. [`vercel.json`](vercel.json) pins **`outputDirectory`** to **`out`**. Use:
+There is no Vercel MCP in Cursor Cloud. Shipping works through **Git**:
+
+```text
+Cursor edits → push to GitHub → Vercel builds `out/` → phone / tablet
+```
+
+### One-time setup (account owner)
+
+1. In [Vercel](https://vercel.com/) → **Add New Project** → import [`YJac16/Little-Muslim-Hero`](https://github.com/YJac16/Little-Muslim-Hero) (or link an existing project to this repo).
+2. In **Cursor Desktop** → connect **GitHub** under Integrations so pushes from Cursor land on the same repo.
+3. Vercel’s Git integration then deploys on each push to the production branch (usually `main`).
+
+### Build settings (static export)
+
+This app uses [`next.config.ts`](next.config.ts) → `output: "export"`, which writes the site to **`out/`**. [`vercel.json`](vercel.json) pins that folder.
 
 | Setting | Value |
 |--------|--------|
 | **Install Command** | `npm install` |
 | **Build Command** | `npm run build` |
 | **Output Directory** | `out` (must match static export; do **not** use `.next` or `public` alone) |
+| **Environment variables** | None |
 
 If dashboard overrides conflict, turn overrides **off** so `vercel.json` applies, or set **`out`** manually.
 
-After the first deploy, each push to `main` triggers a new production deployment.
+### Optional CLI
+
+From the repo root (after `npx vercel login` once):
+
+```bash
+npx vercel        # preview
+npx vercel --prod # production
+```
 
 ### “404: NOT_FOUND” on `*.vercel.app`
 
 Usually **Output Directory** did not match the build (e.g. `.next` or empty while the site is exported to **`out`**). This project **must** publish the **`out`** folder after `npm run build`. Redeploy after pulling latest `main`; in Vercel settings, set **Output Directory** to **`out`** or rely on [`vercel.json`](vercel.json).
+
+## Product roadmap
+
+See **[docs/ROADMAP.md](docs/ROADMAP.md)** for Phases 0–6 (mobile polish → parent trust → content depth → retention → differentiation → growth).
 
 ## Assets — add your files
 
@@ -48,27 +71,12 @@ Usually **Output Directory** did not match the build (e.g. `.next` or empty whil
 | File | Use |
 |------|-----|
 | `nasheed-bg.mp3` | Soft looping background nasheed (play + end screens; respects Sound toggle) |
-| `narration-morning.mp3` | Morning scene prompt |
-| `narration-play.mp3` | Play time prompt |
-| `narration-meal.mp3` | Meal time prompt |
-| `narration-help.mp3` | Helping time prompt |
-| `narration-bed.mp3` | Bedtime prompt |
-| `preview-good.mp3` | “Good” choice when tapped |
-| `preview-neutral.mp3` | Other choice when tapped |
-| `success.mp3` | Success chime |
-| `retry.mp3` | Gentle “try again” |
 
-### Images (`public/assets/images/`)
+Other narration, preview, success, and SFX clips live at the `public/` root and are wired in **`lib/media.ts`**.
 
-The repo ships **soft vector (`.svg`) scenes and choices** (no text in artwork — visuals only). Filenames are wired in **`lib/media.ts`**.
+### Images
 
-| Files | Use |
-|------|-----|
-| `mascot.svg` | Logo / corner badge / end screen |
-| `*-scene.svg` | One per moment (morning, play, meal, helping, bedtime) |
-| `*-good.svg` / `*-neutral.svg` | Choice tiles per moment |
-
-Swap any file for your own **`.svg`** or change **`lib/media.ts`** to point at **`.png`** / **`.webp`** (no text in toddler tiles).
+Scenes, choices, and mascot PNGs live at the `public/` root (wired in **`lib/media.ts`**). PWA icons: `icon-192.png`, `icon-512.png`, `apple-touch-icon.png`.
 
 ## Parent menu
 
@@ -77,15 +85,16 @@ Swap any file for your own **`.svg`** or change **`lib/media.ts`** to point at *
 ## Project structure
 
 - `app/page.tsx` — entry
-- `app/layout.tsx` — fonts, metadata, global styles
+- `app/layout.tsx` — fonts, metadata, PWA icons
 - `components/Game.tsx` — flow (start → five moments → end)
 - `components/Level.tsx` — scene, narration, outcomes
-- `components/ChoiceButton.tsx` — large image choices + audio
+- `components/ChoiceButton.tsx` — large image choices
 - `components/ParentMenu.tsx` — hidden parent controls
-- `lib/media.ts` — image/audio URLs (edit when your filenames differ)
+- `lib/media.ts` — image/audio URLs
 - `lib/levels.ts` — routine data
 - `styles/globals.css` — theme + animations
-- `public/assets/` — images and audio
+- `public/` — images, audio, manifest, icons
+- `docs/ROADMAP.md` — competitive product phases
 
 ## License
 
