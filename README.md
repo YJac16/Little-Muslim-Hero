@@ -32,6 +32,20 @@ Cursor edits → push to GitHub → Vercel builds `out/` → phone / tablet
 2. In **Cursor Desktop** → connect **GitHub** under Integrations so pushes from Cursor land on the same repo.
 3. Vercel’s Git integration then deploys on each push to the production branch (usually `main`).
 
+### Vercel MCP in Cursor
+
+This repo includes [`.cursor/mcp.json`](.cursor/mcp.json) pointing at the official server `https://mcp.vercel.com`.
+
+1. Open the project in **Cursor Desktop** (or reload the window).
+2. When the Vercel MCP shows **Needs login**, click it and complete the Vercel OAuth flow.
+3. After auth, agents can inspect projects, deployments, and logs via Vercel MCP tools.
+
+You can also install/reinstall with:
+
+```bash
+npx add-mcp https://mcp.vercel.com -a cursor -n vercel -y
+```
+
 ### Build settings (static export)
 
 This app uses [`next.config.ts`](next.config.ts) → `output: "export"`, which writes the site to **`out/`**. [`vercel.json`](vercel.json) pins that folder.
