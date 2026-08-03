@@ -52,7 +52,7 @@ export function ChoiceButton({
         src={image}
         alt=""
         fill
-        className="object-contain p-1.5 transition-transform duration-200 group-active:scale-[0.98] sm:p-2"
+        className="object-cover object-center transition-transform duration-200 group-active:scale-[0.98]"
         sizes="(max-width: 640px) 45vw, 280px"
         priority={false}
       />

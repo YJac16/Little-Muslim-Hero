@@ -18,44 +18,80 @@ import { AUDIO, IMG } from "@/lib/media";
 type Screen = "start" | "play" | "end";
 
 const SOUND_KEY = "lmh-sound-enabled";
-const LOGO_HOLD_MS = 3000;
+const PARENT_TAP_COUNT = 5;
+const PARENT_TAP_WINDOW_MS = 1500;
 
-function LogoHold({
+function LogoMultiTap({
   children,
-  onHoldComplete,
+  onUnlock,
 }: {
   children: ReactNode;
-  onHoldComplete: () => void;
+  onUnlock: () => void;
 }) {
-  const timerRef = useRef<number | null>(null);
+  const tapsRef = useRef(0);
+  const windowStartRef = useRef(0);
+  const [tapProgress, setTapProgress] = useState(0);
 
-  const clearTimer = useCallback(() => {
-    if (timerRef.current !== null) {
-      window.clearTimeout(timerRef.current);
-      timerRef.current = null;
+  const onTap = useCallback(() => {
+    const now = Date.now();
+    if (now - windowStartRef.current > PARENT_TAP_WINDOW_MS) {
+      tapsRef.current = 0;
+      windowStartRef.current = now;
     }
-  }, []);
+    tapsRef.current += 1;
+    const count = tapsRef.current;
+    if (count >= PARENT_TAP_COUNT) {
+      tapsRef.current = 0;
+      windowStartRef.current = 0;
+      setTapProgress(0);
+      onUnlock();
+      return;
+    }
+    setTapProgress(count);
+  }, [onUnlock]);
 
-  useEffect(() => () => clearTimer(), [clearTimer]);
-
-  const onPointerDown = useCallback(() => {
-    clearTimer();
-    timerRef.current = window.setTimeout(() => {
-      timerRef.current = null;
-      onHoldComplete();
-    }, LOGO_HOLD_MS);
-  }, [clearTimer, onHoldComplete]);
+  useEffect(() => {
+    if (tapProgress === 0) return;
+    const id = window.setTimeout(() => {
+      tapsRef.current = 0;
+      windowStartRef.current = 0;
+      setTapProgress(0);
+    }, PARENT_TAP_WINDOW_MS);
+    return () => window.clearTimeout(id);
+  }, [tapProgress]);
 
   return (
     <div
-      onPointerDown={onPointerDown}
-      onPointerUp={clearTimer}
-      onPointerLeave={clearTimer}
-      onPointerCancel={clearTimer}
+      role="button"
+      tabIndex={0}
+      onClick={onTap}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onTap();
+        }
+      }}
       onContextMenu={(e) => e.preventDefault()}
-      className="touch-manipulation cursor-pointer select-none"
+      aria-label="Tap 5 times for parent menu"
+      className="relative touch-manipulation cursor-pointer select-none"
     >
       {children}
+      {tapProgress > 0 && (
+        <div
+          className="pointer-events-none absolute inset-x-0 -bottom-2 flex justify-center gap-1"
+          aria-hidden
+        >
+          {Array.from({ length: PARENT_TAP_COUNT }, (_, i) => (
+            <span
+              key={i}
+              className={[
+                "h-1.5 w-1.5 rounded-full transition-colors",
+                i < tapProgress ? "bg-[#ef8b48]" : "bg-[#44664d]/25",
+              ].join(" ")}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -191,7 +227,7 @@ export function Game() {
 
           <div className="flex w-full flex-1 flex-col items-center justify-center gap-3 short:gap-2 sm:gap-5">
             <div className="relative w-full max-w-2xl px-2 text-center sm:px-6">
-              <LogoHold onHoldComplete={openParent}>
+              <LogoMultiTap onUnlock={openParent}>
                 <div className="relative mx-auto h-36 w-36 animate-floatGentle short:h-28 short:w-28 sm:h-52 sm:w-52 landscape:h-28 landscape:w-28">
                   <div className="absolute inset-4 rounded-full bg-[#ffd36b]/25 blur-2xl" />
                   <Image
@@ -202,7 +238,7 @@ export function Game() {
                     priority
                   />
                 </div>
-              </LogoHold>
+              </LogoMultiTap>
 
               <div className="mt-3 space-y-1.5 short:mt-2 short:space-y-1 sm:mt-5 sm:space-y-3">
                 <h1 className="storybook-text font-heading text-4xl leading-none text-[#25513d] short:text-3xl sm:text-6xl">
@@ -228,7 +264,7 @@ export function Game() {
               Start the Day
             </button>
             <p className="text-center text-xs font-semibold text-[#44664d]/80 short:text-[10px]">
-              Grown-ups: hold the hero for parent menu
+              Grown-ups: tap the hero 5 times for parent menu
             </p>
           </div>
         </div>
@@ -237,8 +273,8 @@ export function Game() {
       {screen === "play" && currentLevel && (
         <div className="relative z-10 h-full">
           <div className="absolute inset-x-0 top-[max(0.35rem,env(safe-area-inset-top))] z-20 flex items-center justify-between px-2.5 sm:px-4">
-            <LogoHold onHoldComplete={openParent}>
-              <div className="glass-panel relative h-11 w-11 rounded-2xl p-1 shadow-softBlue sm:h-14 sm:w-14 landscape:h-10 landscape:w-10">
+            <LogoMultiTap onUnlock={openParent}>
+              <div className="glass-panel relative h-12 w-12 rounded-2xl p-1 shadow-softBlue sm:h-14 sm:w-14 landscape:h-12 landscape:w-12">
                 <Image
                   src={IMG.mascot}
                   alt="Open parent menu"
@@ -246,7 +282,7 @@ export function Game() {
                   className="object-contain p-0.5"
                 />
               </div>
-            </LogoHold>
+            </LogoMultiTap>
 
             <div className="glass-panel flex items-center gap-1.5 rounded-full px-2.5 py-1.5 shadow-softBlue sm:gap-2 sm:px-3 sm:py-2">
               {levels.map((level, index) => {
@@ -271,7 +307,7 @@ export function Game() {
             <button
               type="button"
               onClick={() => persistSound(!soundEnabled)}
-              className="glass-panel flex h-11 w-11 items-center justify-center rounded-2xl text-[#28503a] shadow-softBlue sm:h-14 sm:w-14 landscape:h-10 landscape:w-10 touch-manipulation"
+              className="glass-panel flex h-12 w-12 items-center justify-center rounded-2xl text-[#28503a] shadow-softBlue sm:h-14 sm:w-14 landscape:h-12 landscape:w-12 touch-manipulation"
               aria-label={soundEnabled ? "Turn sound off" : "Turn sound on"}
             >
               <SoundIcon on={soundEnabled} />
@@ -292,7 +328,7 @@ export function Game() {
       {screen === "end" && (
         <div className="relative z-10 flex h-full flex-col items-center justify-center px-5 text-center safe-pb pt-[max(1rem,env(safe-area-inset-top))] sm:px-6">
           <div className="absolute left-3 top-[max(0.5rem,env(safe-area-inset-top))] z-10">
-            <LogoHold onHoldComplete={openParent}>
+            <LogoMultiTap onUnlock={openParent}>
               <div className="glass-panel relative h-12 w-12 rounded-2xl p-1 shadow-softBlue sm:h-14 sm:w-14">
                 <Image
                   src={IMG.mascot}
@@ -301,11 +337,11 @@ export function Game() {
                   className="object-contain p-0.5"
                 />
               </div>
-            </LogoHold>
+            </LogoMultiTap>
           </div>
 
           <div className="relative w-full max-w-xl px-2">
-            <LogoHold onHoldComplete={openParent}>
+            <LogoMultiTap onUnlock={openParent}>
               <div className="relative mx-auto mb-4 h-36 w-36 animate-scaleSuccess short:mb-2 short:h-28 short:w-28 sm:mb-6 sm:h-48 sm:w-48">
                 <div className="absolute inset-4 rounded-full bg-[#ffd36b]/30 blur-2xl" />
                 <Image
@@ -315,7 +351,7 @@ export function Game() {
                   className="object-contain"
                 />
               </div>
-            </LogoHold>
+            </LogoMultiTap>
 
             <h2 className="storybook-text font-heading text-3xl leading-tight text-[#25513d] short:text-2xl sm:text-5xl">
               MashaAllah!

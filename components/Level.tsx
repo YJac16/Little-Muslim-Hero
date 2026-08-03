@@ -168,7 +168,7 @@ export function Level({
             src={level.scene}
             alt={`${level.name} story scene`}
             fill
-            className="object-contain object-center short:object-cover landscape:object-contain"
+            className="object-cover object-center"
             sizes="100vw"
             priority
           />
@@ -200,7 +200,7 @@ export function Level({
           {showSparkles && <SparkleOverlay />}
         </div>
 
-        <div className="grid shrink-0 grid-cols-2 gap-2 pb-1 sm:gap-3 sm:pb-2 landscape:basis-[42%] landscape:content-center landscape:gap-2.5 landscape:pb-0 landscape:self-center">
+        <div className="grid shrink-0 grid-cols-2 gap-2 pb-[max(0.25rem,env(safe-area-inset-bottom))] sm:gap-3 sm:pb-2 landscape:basis-[42%] landscape:content-center landscape:gap-2.5 landscape:pb-0 landscape:self-center">
           <ChoiceButton
             image={level.choices[0].image}
             isCorrect={level.choices[0].correct}
