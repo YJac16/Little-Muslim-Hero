@@ -274,12 +274,13 @@ export function Game() {
         <div className="relative z-10 h-full">
           <div className="absolute inset-x-0 top-[max(0.35rem,env(safe-area-inset-top))] z-20 flex items-center justify-between px-2.5 sm:px-4">
             <LogoMultiTap onUnlock={openParent}>
-              <div className="glass-panel relative h-12 w-12 rounded-2xl p-1 shadow-softBlue sm:h-14 sm:w-14 landscape:h-12 landscape:w-12">
+              <div className="glass-panel relative h-12 w-12 overflow-hidden rounded-2xl shadow-softBlue sm:h-14 sm:w-14 landscape:h-12 landscape:w-12">
                 <Image
                   src={IMG.mascot}
                   alt="Open parent menu"
                   fill
-                  className="object-contain p-0.5"
+                  className="object-cover object-center"
+                  sizes="56px"
                 />
               </div>
             </LogoMultiTap>
@@ -329,12 +330,13 @@ export function Game() {
         <div className="relative z-10 flex h-full flex-col items-center justify-center px-5 text-center safe-pb pt-[max(1rem,env(safe-area-inset-top))] sm:px-6">
           <div className="absolute left-3 top-[max(0.5rem,env(safe-area-inset-top))] z-10">
             <LogoMultiTap onUnlock={openParent}>
-              <div className="glass-panel relative h-12 w-12 rounded-2xl p-1 shadow-softBlue sm:h-14 sm:w-14">
+              <div className="glass-panel relative h-12 w-12 overflow-hidden rounded-2xl shadow-softBlue sm:h-14 sm:w-14">
                 <Image
                   src={IMG.mascot}
                   alt="Open parent menu"
                   fill
-                  className="object-contain p-0.5"
+                  className="object-cover object-center"
+                  sizes="56px"
                 />
               </div>
             </LogoMultiTap>
