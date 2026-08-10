@@ -17,9 +17,57 @@ import { AUDIO, IMG } from "@/lib/media";
 
 type Screen = "start" | "play" | "end";
 
+type Progress = {
+  screen: Screen;
+  levelIndex: number;
+};
+
 const SOUND_KEY = "lmh-sound-enabled";
+const PROGRESS_KEY = "lmh-progress";
 const PARENT_TAP_COUNT = 5;
 const PARENT_TAP_WINDOW_MS = 1500;
+
+function isScreen(value: unknown): value is Screen {
+  return value === "start" || value === "play" || value === "end";
+}
+
+function readProgress(): Progress | null {
+  try {
+    const raw = localStorage.getItem(PROGRESS_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as { screen?: unknown; levelIndex?: unknown };
+    if (!isScreen(parsed.screen)) return null;
+    const levelIndex = Number(parsed.levelIndex);
+    if (
+      !Number.isInteger(levelIndex) ||
+      levelIndex < 0 ||
+      levelIndex >= levels.length
+    ) {
+      return parsed.screen === "end"
+        ? { screen: "end", levelIndex: levels.length - 1 }
+        : null;
+    }
+    return { screen: parsed.screen, levelIndex };
+  } catch {
+    return null;
+  }
+}
+
+function writeProgress(progress: Progress) {
+  try {
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+  } catch {
+    /* ignore */
+  }
+}
+
+function clearProgress() {
+  try {
+    localStorage.removeItem(PROGRESS_KEY);
+  } catch {
+    /* ignore */
+  }
+}
 
 function LogoMultiTap({
   children,
@@ -123,6 +171,7 @@ export function Game() {
   const [levelIndex, setLevelIndex] = useState(0);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [parentOpen, setParentOpen] = useState(false);
+  const [ready, setReady] = useState(false);
   const startingRef = useRef(false);
 
   useEffect(() => {
@@ -132,7 +181,22 @@ export function Game() {
     } catch {
       /* ignore */
     }
+    const saved = readProgress();
+    if (saved) {
+      setScreen(saved.screen);
+      setLevelIndex(saved.levelIndex);
+    }
+    setReady(true);
   }, []);
+
+  useEffect(() => {
+    if (!ready) return;
+    if (screen === "start") {
+      clearProgress();
+      return;
+    }
+    writeProgress({ screen, levelIndex });
+  }, [ready, screen, levelIndex]);
 
   const persistSound = useCallback((next: boolean) => {
     setSoundEnabled(next);
@@ -188,6 +252,7 @@ export function Game() {
   }, []);
 
   const resetProgress = useCallback(() => {
+    clearProgress();
     setLevelIndex(0);
     setScreen("start");
     setParentOpen(false);
@@ -195,6 +260,15 @@ export function Game() {
 
   const currentLevel = levels[levelIndex];
   const progressCount = screen === "end" ? levels.length : levelIndex;
+
+  if (!ready) {
+    return (
+      <div
+        className="relative h-[100dvh] max-h-[100dvh] w-full overflow-hidden bg-cream"
+        aria-busy="true"
+      />
+    );
+  }
 
   return (
     <div className="relative h-[100dvh] max-h-[100dvh] w-full overflow-hidden bg-cream">
