@@ -191,8 +191,8 @@ export function Level({
         {/* Scene — atmosphere, not the main tap target */}
         <div
           className={[
-            "relative min-h-0 flex-[0.75] overflow-hidden rounded-[28px] bg-black/5 shadow-glow sm:rounded-[32px]",
-            "max-h-[36vh] sm:max-h-[38vh] short:max-h-[32vh] short:flex-[0.65]",
+            "relative min-h-0 flex-1 overflow-hidden rounded-[28px] bg-black/5 shadow-glow sm:rounded-[32px]",
+            "max-h-[40vh] sm:max-h-[42vh] short:max-h-[34vh]",
             showSparkles ? "animate-scaleSuccess" : "",
             waiting ? "listen-pulse-ring" : "",
           ]
@@ -296,13 +296,9 @@ export function Level({
           </div>
         </div>
 
-        {/* Choice tray — largest tap targets on screen */}
-        <div
-          className={[
-            "choice-tray relative flex min-h-0 flex-[1.35] flex-col short:flex-[1.15]",
-          ].join(" ")}
-        >
-          <div className="grid min-h-0 flex-1 grid-cols-2 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
+        {/* Choice tray — large taps, aspect matches landscape art */}
+        <div className="choice-tray relative shrink-0">
+          <div className="grid grid-cols-2 items-center gap-3 sm:gap-4 md:gap-5 lg:gap-6">
             <ChoiceButton
               image={level.choices[0].image}
               label={level.choices[0].label}

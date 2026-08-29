@@ -61,8 +61,10 @@ export function ChoiceButton({
       aria-label={label}
       aria-disabled={locked}
       className={[
-        "group relative h-full min-h-[168px] w-full select-none overflow-hidden rounded-[28px] border-[3px] border-white bg-white/85 shadow-softBlue transition-all duration-200 touch-manipulation",
-        "sm:min-h-[200px] md:min-h-[240px] lg:min-h-[280px]",
+        /* Match landscape choice art (~4:3). Avoid h-full stretch → tall
+           portrait frames that object-cover then side-crops. */
+        "group relative aspect-[4/3] w-full max-h-[min(42vh,20rem)] select-none overflow-hidden rounded-[28px] border-[3px] border-white bg-[#fff8e7] shadow-softBlue transition-all duration-200 touch-manipulation",
+        "sm:max-h-[min(46vh,24rem)]",
         "active:scale-[0.97]",
         isHighlighted
           ? "scale-[1.02] border-[#ffd36b] ring-4 ring-[#ffd36b]/80 ring-offset-2 ring-offset-cream shadow-glow"
@@ -82,8 +84,8 @@ export function ChoiceButton({
         alt=""
         fill
         className={[
-          "object-cover object-center transition-transform duration-200 group-active:scale-[0.98]",
-          waiting ? "scale-[1.01] brightness-90" : "",
+          "object-contain object-center transition-transform duration-200 group-active:scale-[0.98]",
+          waiting ? "brightness-90" : "",
         ]
           .filter(Boolean)
           .join(" ")}
@@ -91,7 +93,7 @@ export function ChoiceButton({
         priority
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent"
         aria-hidden
       />
       {waiting && (
@@ -99,7 +101,7 @@ export function ChoiceButton({
           className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[#21412b]/28"
           aria-hidden
         >
-          <span className="listen-lock-pulse flex h-16 w-16 items-center justify-center rounded-full bg-white/95 shadow-soft sm:h-[4.5rem] sm:w-[4.5rem]">
+          <span className="listen-lock-pulse flex h-14 w-14 items-center justify-center rounded-full bg-white/95 shadow-soft sm:h-16 sm:w-16">
             <EarIcon />
           </span>
         </div>
