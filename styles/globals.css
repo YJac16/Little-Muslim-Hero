@@ -132,6 +132,7 @@ body::after {
 
 .cta-glow {
   position: relative;
+  isolation: isolate;
 }
 
 .cta-glow::after {

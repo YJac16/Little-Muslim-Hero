@@ -99,7 +99,7 @@ Scenes, choices, and mascot PNGs live at the `public/` root (wired in **`lib/med
 
 ## Parent menu
 
-**Tap and hold** the mascot (about **3 seconds**) on the start screen, in-level corner badge, or end screen to open the parent menu: jump to any part of the day, toggle sound, or reset progress.
+**Tap the mascot 5 times** (within ~1.5s) on the start screen, in-level corner badge, or end screen to open the parent menu: jump to any part of the day, toggle sound, or reset progress.
 
 ## Project structure
 

@@ -73,13 +73,18 @@ export function playUrl(
       return;
     }
 
+    let settled = false;
     const done = () => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(safety);
       audio?.removeEventListener("ended", onEnd);
       audio?.removeEventListener("error", onEnd);
       unduck();
       resolve();
     };
     const onEnd = () => done();
+    const safety = window.setTimeout(done, 12_000);
     audio.addEventListener("ended", onEnd, { once: true });
     audio.addEventListener("error", onEnd, { once: true });
     void audio.play().catch(() => done());

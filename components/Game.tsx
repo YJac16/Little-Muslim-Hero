@@ -218,29 +218,23 @@ export function Game() {
   const openParent = useCallback(() => setParentOpen(true), []);
   const closeParent = useCallback(() => setParentOpen(false), []);
 
-  const startGame = useCallback(async () => {
+  const startGame = useCallback(() => {
     if (startingRef.current) return;
     startingRef.current = true;
-    try {
-      await playUrl(AUDIO.uiStart, soundEnabled, 0.85);
-      setLevelIndex(0);
-      setScreen("play");
-    } finally {
-      startingRef.current = false;
-    }
+    void playUrl(AUDIO.uiStart, soundEnabled, 0.85);
+    setLevelIndex(0);
+    setScreen("play");
+    startingRef.current = false;
   }, [soundEnabled]);
 
-  const playAgain = useCallback(async () => {
+  const playAgain = useCallback(() => {
     if (startingRef.current) return;
     startingRef.current = true;
-    try {
-      await playUrl(AUDIO.uiStart, soundEnabled, 0.85);
-      celebratedRef.current = false;
-      setLevelIndex(0);
-      setScreen("play");
-    } finally {
-      startingRef.current = false;
-    }
+    void playUrl(AUDIO.uiStart, soundEnabled, 0.85);
+    celebratedRef.current = false;
+    setLevelIndex(0);
+    setScreen("play");
+    startingRef.current = false;
   }, [soundEnabled]);
 
   const onLevelComplete = useCallback(() => {
@@ -358,8 +352,8 @@ export function Game() {
             <div className="z-10 w-full max-w-md space-y-2 hero-enter-delay">
               <button
                 type="button"
-                onClick={() => void startGame()}
-                className="cta-glow w-full rounded-[28px] border border-white/50 bg-gradient-to-r from-primary to-[#5bcf72] px-6 py-5 text-2xl font-bold text-white shadow-soft transition-transform active:scale-[0.99] min-h-[96px] short:min-h-[88px] sm:min-h-[108px] touch-manipulation"
+                onClick={startGame}
+                className="cta-glow relative z-20 w-full rounded-[28px] border border-white/50 bg-gradient-to-r from-primary to-[#5bcf72] px-6 py-5 text-2xl font-bold text-white shadow-soft transition-transform active:scale-[0.99] min-h-[96px] short:min-h-[88px] sm:min-h-[108px] touch-manipulation"
               >
                 Start the Day
               </button>
@@ -504,8 +498,8 @@ export function Game() {
 
             <button
               type="button"
-              onClick={() => void playAgain()}
-              className="cta-glow hero-enter-delay mt-6 w-full max-w-md rounded-[28px] border border-white/50 bg-gradient-to-r from-[#5cbff5] to-[#7ad2ff] px-6 py-5 text-xl font-bold text-white shadow-softBlue transition-transform active:scale-[0.99] min-h-[96px] short:mt-4 short:min-h-[88px] sm:mt-8 sm:min-h-[108px] touch-manipulation"
+              onClick={playAgain}
+              className="cta-glow relative z-20 hero-enter-delay mt-6 w-full max-w-md rounded-[28px] border border-white/50 bg-gradient-to-r from-[#5cbff5] to-[#7ad2ff] px-6 py-5 text-xl font-bold text-white shadow-softBlue transition-transform active:scale-[0.99] min-h-[96px] short:mt-4 short:min-h-[88px] sm:mt-8 sm:min-h-[108px] touch-manipulation"
             >
               Play Again
             </button>
