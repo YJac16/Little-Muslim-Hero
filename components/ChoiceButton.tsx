@@ -61,8 +61,8 @@ export function ChoiceButton({
       aria-label={label}
       aria-disabled={locked}
       className={[
-        "group relative h-full min-h-[148px] w-full select-none overflow-hidden rounded-[28px] border-[3px] border-white bg-white/85 shadow-softBlue transition-all duration-200 touch-manipulation",
-        "sm:min-h-[180px] md:min-h-[220px] lg:min-h-[240px]",
+        "group relative h-full min-h-[168px] w-full select-none overflow-hidden rounded-[28px] border-[3px] border-white bg-white/85 shadow-softBlue transition-all duration-200 touch-manipulation",
+        "sm:min-h-[200px] md:min-h-[240px] lg:min-h-[280px]",
         "active:scale-[0.97]",
         isHighlighted
           ? "scale-[1.02] border-[#ffd36b] ring-4 ring-[#ffd36b]/80 ring-offset-2 ring-offset-cream shadow-glow"

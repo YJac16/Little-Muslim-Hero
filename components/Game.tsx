@@ -327,20 +327,22 @@ export function Game() {
             <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center gap-4 short:gap-2 sm:gap-5">
               <div className="hero-enter flex w-full flex-col items-center text-center">
                 <LogoMultiTap onUnlock={openParent} className="mb-1">
-                  <div className="relative mx-auto h-[min(42vw,15rem)] w-[min(42vw,15rem)] animate-floatGentle short:h-32 short:w-32 sm:h-64 sm:w-64 md:h-72 md:w-72">
-                    <div className="absolute inset-4 rounded-full bg-[#ffd36b]/40 blur-2xl" />
-                    <Image
-                      src={IMG.mascot}
-                      alt="Little Muslim Hero mascot"
-                      fill
-                      className="object-contain object-bottom drop-shadow-lg"
-                      priority
-                      sizes="(max-width: 640px) 42vw, 288px"
-                    />
+                  <div className="relative mx-auto h-[min(58vw,20rem)] w-[min(58vw,20rem)] animate-floatGentle short:h-36 short:w-36 sm:h-72 sm:w-72 md:h-80 md:w-80">
+                    <div className="absolute inset-3 rounded-full bg-[#ffd36b]/45 blur-2xl" />
+                    <div className="absolute inset-[8%] overflow-hidden rounded-full bg-white/50 shadow-glow ring-4 ring-white/70">
+                      <Image
+                        src={IMG.mascot}
+                        alt="Little Muslim Hero mascot"
+                        fill
+                        className="object-cover object-[center_20%] drop-shadow-lg"
+                        priority
+                        sizes="(max-width: 640px) 58vw, 320px"
+                      />
+                    </div>
                   </div>
                 </LogoMultiTap>
 
-                <h1 className="storybook-text mt-2 font-heading text-[clamp(2.4rem,7vw,4.5rem)] leading-[0.95] text-[#25513d] short:mt-1 short:text-3xl">
+                <h1 className="storybook-text mt-3 font-heading text-[clamp(2.6rem,7.5vw,4.75rem)] leading-[0.92] text-[#25513d] short:mt-1 short:text-3xl">
                   Little Muslim Hero
                 </h1>
                 <p className="mt-1 font-heading text-[clamp(1.25rem,3.5vw,2.25rem)] text-[#ef8b48] short:text-lg">
@@ -471,15 +473,17 @@ export function Game() {
 
             <div className="hero-enter relative w-full px-2">
               <LogoMultiTap onUnlock={openParent}>
-                <div className="relative mx-auto mb-3 h-44 w-44 animate-scaleSuccess short:mb-2 short:h-32 short:w-32 sm:mb-5 sm:h-56 sm:w-56 md:h-64 md:w-64">
+                <div className="relative mx-auto mb-3 h-52 w-52 animate-scaleSuccess short:mb-2 short:h-36 short:w-36 sm:mb-5 sm:h-64 sm:w-64 md:h-72 md:w-72">
                   <div className="absolute inset-4 rounded-full bg-[#ffd36b]/35 blur-2xl" />
-                  <Image
-                    src={IMG.mascotCelebrating}
-                    alt="Celebrating Little Muslim Hero"
-                    fill
-                    className="object-contain"
-                    sizes="(max-width: 640px) 44vw, 256px"
-                  />
+                  <div className="absolute inset-[6%] overflow-hidden rounded-full bg-white/40 ring-4 ring-white/70">
+                    <Image
+                      src={IMG.mascotCelebrating}
+                      alt="Celebrating Little Muslim Hero"
+                      fill
+                      className="object-cover object-center"
+                      sizes="(max-width: 640px) 52vw, 288px"
+                    />
+                  </div>
                 </div>
               </LogoMultiTap>
 
