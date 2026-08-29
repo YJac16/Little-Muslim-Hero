@@ -24,12 +24,36 @@ type LevelProps = {
   onComplete: () => void;
 };
 
-const phaseBadge: Record<Phase, string> = {
-  narration: "Listen",
-  ready: "Choose",
-  success: "MashaAllah",
-  retry: "Try again",
-};
+function EarIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M6 12a6 6 0 0 1 11.5-2.4c.6 1.2.5 2.7-.2 3.9L15 17.5a2.5 2.5 0 0 1-4.3-1.7V12" />
+      <path d="M10.7 12v3.2a1.2 1.2 0 0 0 2.1.8l1.6-2.1" />
+    </svg>
+  );
+}
+
+function HandIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="currentColor"
+      aria-hidden
+    >
+      <path d="M8.5 21a2.5 2.5 0 0 1-2.5-2.5V11l-1.2.6A1.8 1.8 0 0 1 2.2 9.7L7.6 4.8A3 3 0 0 1 9.8 4H11a2 2 0 0 1 2 2v.5A2 2 0 0 1 15.5 8h.2A2.3 2.3 0 0 1 18 10.3V18a3 3 0 0 1-3 3H8.5z" />
+    </svg>
+  );
+}
 
 export function Level({
   level,
@@ -80,7 +104,7 @@ export function Level({
       if (soundEnabled) {
         await playUrl(level.narration, soundEnabled, 1);
       } else {
-        await new Promise((resolve) => setTimeout(resolve, 600));
+        await new Promise((resolve) => setTimeout(resolve, 900));
       }
       if (cancelled) return;
       setPhase("ready");
@@ -137,8 +161,14 @@ export function Level({
 
   const choiceLocked =
     phase === "narration" || phase === "success" || phase === "retry";
+  const waiting = phase === "narration";
   const showSparkles = phase === "success";
-  const listening = phase === "narration";
+  const caption =
+    phase === "success"
+      ? level.successCaption
+      : phase === "retry"
+        ? "Try the other picture."
+        : level.prompt;
   const emotionSrc =
     phase === "success"
       ? IMG.mascotHappy
@@ -148,72 +178,46 @@ export function Level({
 
   return (
     <div
-      className="flex h-full max-h-[100dvh] flex-col pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-[max(3.75rem,env(safe-area-inset-top))] landscape:pt-[max(3.25rem,env(safe-area-inset-top))]"
+      className="flex h-full max-h-[100dvh] flex-col pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-[max(4.25rem,env(safe-area-inset-top))]"
       role="region"
       aria-labelledby={`${id}-scene`}
+      aria-describedby={`${id}-caption`}
     >
       <span id={`${id}-scene`} className="sr-only">
         {level.name}
       </span>
 
-      <div className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col gap-2 px-2 sm:gap-3 sm:px-4 landscape:flex-row landscape:items-stretch landscape:gap-3 landscape:px-3">
+      <div className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col gap-2 px-3 sm:gap-3 sm:px-5 lg:px-6">
+        {/* Scene — atmosphere, not the main tap target */}
         <div
           className={[
-            "relative min-h-0 flex-1 overflow-hidden rounded-[28px] bg-black/5 shadow-glow sm:rounded-[32px]",
-            "landscape:min-h-0 landscape:basis-[58%]",
-            "short:min-h-[38%] short:flex-[0.9]",
+            "relative min-h-0 flex-[0.9] overflow-hidden rounded-[28px] bg-black/5 shadow-glow sm:rounded-[32px]",
+            "max-h-[42vh] sm:max-h-[46vh] short:max-h-[36vh] short:flex-[0.75]",
             showSparkles ? "animate-scaleSuccess" : "",
-            listening ? "listen-pulse-ring" : "",
+            waiting ? "listen-pulse-ring" : "",
           ]
             .filter(Boolean)
             .join(" ")}
         >
           <Image
             src={level.scene}
-            alt={`${level.name} story scene`}
+            alt=""
             fill
             className="object-cover object-center"
-            sizes="100vw"
+            sizes="(max-width: 1024px) 100vw, 960px"
             priority
           />
 
           <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-2.5 sm:p-3">
-            <div className="rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-md">
-              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white">
+            <div className="rounded-full bg-black/45 px-3.5 py-1.5 backdrop-blur-md">
+              <p className="text-sm font-bold text-white sm:text-base">
                 {levelIndex + 1}/{totalLevels}
-              </p>
-            </div>
-            <div
-              className={[
-                "rounded-full px-3 py-1.5 backdrop-blur-md",
-                listening
-                  ? "bg-[#ef8b48]/90 animate-softPulse"
-                  : phase === "success"
-                    ? "bg-primary/90"
-                    : "bg-black/40",
-              ].join(" ")}
-            >
-              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#fff8e7]">
-                {phaseBadge[phase]}
               </p>
             </div>
           </div>
 
-          {listening && (
-            <div className="pointer-events-none absolute inset-x-0 bottom-3 flex justify-center">
-              <div className="flex items-center gap-2 rounded-full bg-black/45 px-4 py-2 backdrop-blur-md">
-                <span className="listen-bars" aria-hidden>
-                  <i />
-                  <i />
-                  <i />
-                </span>
-                <span className="text-xs font-bold text-white">Listen…</span>
-              </div>
-            </div>
-          )}
-
           {emotionSrc && (
-            <div className="pointer-events-none absolute bottom-2 right-2 h-16 w-16 animate-scaleSuccess sm:h-20 sm:w-20 landscape:h-14 landscape:w-14">
+            <div className="pointer-events-none absolute bottom-2 right-2 h-16 w-16 animate-scaleSuccess sm:h-20 sm:w-20">
               <Image
                 src={emotionSrc}
                 alt=""
@@ -226,28 +230,96 @@ export function Level({
           {showSparkles && <SparkleOverlay />}
         </div>
 
-        {/* Duolingo-style bottom choice tray */}
+        {/* Caption + phase cue — readable without audio */}
         <div
           className={[
-            "choice-tray shrink-0 pb-[max(0.25rem,env(safe-area-inset-bottom))] sm:pb-2",
-            "landscape:basis-[42%] landscape:content-center landscape:self-center landscape:pb-0",
-            listening ? "opacity-55" : "opacity-100",
-            "transition-opacity duration-300",
+            "glass-panel flex items-center gap-3 rounded-[22px] px-3.5 py-3 shadow-softBlue sm:gap-4 sm:px-5 sm:py-3.5",
+            waiting ? "ring-2 ring-[#ef8b48]/70" : "",
+            phase === "ready" ? "ring-2 ring-primary/50" : "",
+            phase === "success" ? "ring-2 ring-[#ffd36b]/80" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          <div
+            className={[
+              "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl sm:h-14 sm:w-14",
+              waiting
+                ? "bg-[#ef8b48] text-white animate-softPulse"
+                : phase === "success"
+                  ? "bg-primary text-white"
+                  : phase === "retry"
+                    ? "bg-[#ef8b48]/85 text-white"
+                    : "bg-primary text-white animate-softPulse",
+            ].join(" ")}
+            aria-hidden
+          >
+            {waiting ? (
+              <EarIcon className="h-7 w-7 sm:h-8 sm:w-8" />
+            ) : phase === "success" ? (
+              <span className="text-2xl font-black leading-none">★</span>
+            ) : (
+              <HandIcon className="h-7 w-7 sm:h-8 sm:w-8" />
+            )}
+          </div>
+          <div className="min-w-0 flex-1 text-left">
+            <p
+              className="text-xs font-bold uppercase tracking-wide text-[#44664d]/75 sm:text-sm"
+              aria-hidden={waiting}
+            >
+              {waiting
+                ? "Listen"
+                : phase === "success"
+                  ? "MashaAllah"
+                  : phase === "retry"
+                    ? "Try again"
+                    : "Your turn"}
+            </p>
+            <p
+              id={`${id}-caption`}
+              className="storybook-text text-base font-bold leading-snug text-[#21412b] sm:text-lg md:text-xl"
+            >
+              {caption}
+            </p>
+            {waiting && (
+              <div className="mt-1.5 flex items-center gap-2" aria-live="polite">
+                <span className="listen-bars" aria-hidden>
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                <span className="text-sm font-semibold text-[#ef8b48]">
+                  Please wait…
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Choice tray — largest tap targets on screen */}
+        <div
+          className={[
+            "choice-tray relative flex min-h-0 flex-[1.15] flex-col short:flex-1",
+            waiting ? "" : "",
           ].join(" ")}
         >
-          <div className="grid grid-cols-2 gap-2.5 sm:gap-3 landscape:gap-2.5">
+          <div className="grid min-h-0 flex-1 grid-cols-2 gap-3 sm:gap-4 md:gap-5">
             <ChoiceButton
               image={level.choices[0].image}
+              label={level.choices[0].label}
               isCorrect={level.choices[0].correct}
-              disabled={choiceLocked}
+              disabled={choiceLocked && !waiting}
+              waiting={waiting}
               isHighlighted={highlightCorrect && level.choices[0].correct}
               shouldShake={shakeWrong && selectedWrongIndex === 0}
               onResolved={(ok) => void handleResolved(0, ok)}
             />
             <ChoiceButton
               image={level.choices[1].image}
+              label={level.choices[1].label}
               isCorrect={level.choices[1].correct}
-              disabled={choiceLocked}
+              disabled={choiceLocked && !waiting}
+              waiting={waiting}
               isHighlighted={highlightCorrect && level.choices[1].correct}
               shouldShake={shakeWrong && selectedWrongIndex === 1}
               onResolved={(ok) => void handleResolved(1, ok)}
