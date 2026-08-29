@@ -84,6 +84,7 @@ export function Level({
       }
       if (cancelled) return;
       setPhase("ready");
+      void playUrl(AUDIO.uiTap, soundEnabled, 0.55);
     };
 
     void run();
@@ -102,6 +103,7 @@ export function Level({
 
       const choice = level.choices[index];
       stopUrl(level.narration);
+      void playUrl(AUDIO.uiTap, soundEnabled, 0.5);
 
       if (correct) {
         completedRef.current = true;
@@ -136,6 +138,7 @@ export function Level({
   const choiceLocked =
     phase === "narration" || phase === "success" || phase === "retry";
   const showSparkles = phase === "success";
+  const listening = phase === "narration";
   const emotionSrc =
     phase === "success"
       ? IMG.mascotHappy
@@ -156,10 +159,11 @@ export function Level({
       <div className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col gap-2 px-2 sm:gap-3 sm:px-4 landscape:flex-row landscape:items-stretch landscape:gap-3 landscape:px-3">
         <div
           className={[
-            "relative min-h-0 flex-1 overflow-hidden rounded-[24px] bg-black/5 shadow-glow sm:rounded-[28px]",
+            "relative min-h-0 flex-1 overflow-hidden rounded-[28px] bg-black/5 shadow-glow sm:rounded-[32px]",
             "landscape:min-h-0 landscape:basis-[58%]",
             "short:min-h-[38%] short:flex-[0.9]",
             showSparkles ? "animate-scaleSuccess" : "",
+            listening ? "listen-pulse-ring" : "",
           ]
             .filter(Boolean)
             .join(" ")}
@@ -173,18 +177,40 @@ export function Level({
             priority
           />
 
-          <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-2 sm:p-3">
-            <div className="rounded-full bg-black/35 px-3 py-1.5 backdrop-blur-sm">
+          <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-2.5 sm:p-3">
+            <div className="rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-md">
               <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white">
                 {levelIndex + 1}/{totalLevels}
               </p>
             </div>
-            <div className="rounded-full bg-black/35 px-3 py-1.5 backdrop-blur-sm">
-              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#ffe7a3]">
+            <div
+              className={[
+                "rounded-full px-3 py-1.5 backdrop-blur-md",
+                listening
+                  ? "bg-[#ef8b48]/90 animate-softPulse"
+                  : phase === "success"
+                    ? "bg-primary/90"
+                    : "bg-black/40",
+              ].join(" ")}
+            >
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#fff8e7]">
                 {phaseBadge[phase]}
               </p>
             </div>
           </div>
+
+          {listening && (
+            <div className="pointer-events-none absolute inset-x-0 bottom-3 flex justify-center">
+              <div className="flex items-center gap-2 rounded-full bg-black/45 px-4 py-2 backdrop-blur-md">
+                <span className="listen-bars" aria-hidden>
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                <span className="text-xs font-bold text-white">Listen…</span>
+              </div>
+            </div>
+          )}
 
           {emotionSrc && (
             <div className="pointer-events-none absolute bottom-2 right-2 h-16 w-16 animate-scaleSuccess sm:h-20 sm:w-20 landscape:h-14 landscape:w-14">
@@ -200,23 +226,33 @@ export function Level({
           {showSparkles && <SparkleOverlay />}
         </div>
 
-        <div className="grid shrink-0 grid-cols-2 gap-2 pb-[max(0.25rem,env(safe-area-inset-bottom))] sm:gap-3 sm:pb-2 landscape:basis-[42%] landscape:content-center landscape:gap-2.5 landscape:pb-0 landscape:self-center">
-          <ChoiceButton
-            image={level.choices[0].image}
-            isCorrect={level.choices[0].correct}
-            disabled={choiceLocked}
-            isHighlighted={highlightCorrect && level.choices[0].correct}
-            shouldShake={shakeWrong && selectedWrongIndex === 0}
-            onResolved={(ok) => void handleResolved(0, ok)}
-          />
-          <ChoiceButton
-            image={level.choices[1].image}
-            isCorrect={level.choices[1].correct}
-            disabled={choiceLocked}
-            isHighlighted={highlightCorrect && level.choices[1].correct}
-            shouldShake={shakeWrong && selectedWrongIndex === 1}
-            onResolved={(ok) => void handleResolved(1, ok)}
-          />
+        {/* Duolingo-style bottom choice tray */}
+        <div
+          className={[
+            "choice-tray shrink-0 pb-[max(0.25rem,env(safe-area-inset-bottom))] sm:pb-2",
+            "landscape:basis-[42%] landscape:content-center landscape:self-center landscape:pb-0",
+            listening ? "opacity-55" : "opacity-100",
+            "transition-opacity duration-300",
+          ].join(" ")}
+        >
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3 landscape:gap-2.5">
+            <ChoiceButton
+              image={level.choices[0].image}
+              isCorrect={level.choices[0].correct}
+              disabled={choiceLocked}
+              isHighlighted={highlightCorrect && level.choices[0].correct}
+              shouldShake={shakeWrong && selectedWrongIndex === 0}
+              onResolved={(ok) => void handleResolved(0, ok)}
+            />
+            <ChoiceButton
+              image={level.choices[1].image}
+              isCorrect={level.choices[1].correct}
+              disabled={choiceLocked}
+              isHighlighted={highlightCorrect && level.choices[1].correct}
+              shouldShake={shakeWrong && selectedWrongIndex === 1}
+              onResolved={(ok) => void handleResolved(1, ok)}
+            />
+          </div>
         </div>
       </div>
     </div>
