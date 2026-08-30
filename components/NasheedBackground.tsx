@@ -1,16 +1,39 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import {
+  BG_VOLUME_IDLE,
+  getBackgroundVolume,
+  subscribeBackgroundVolume,
+} from "@/lib/audio";
 import { AUDIO } from "@/lib/media";
-
-/** Quiet so narration and SFX stay clear. */
-const BG_VOLUME = 0.26;
 
 type NasheedBackgroundProps = {
   soundEnabled: boolean;
   /** When false (title screen), pause and reset. */
   active: boolean;
 };
+
+function fadeTo(el: HTMLAudioElement, target: number, ms = 280) {
+  const start = el.volume;
+  const delta = target - start;
+  if (Math.abs(delta) < 0.01) {
+    el.volume = target;
+    return;
+  }
+  const t0 = performance.now();
+  const step = (now: number) => {
+    const t = Math.min(1, (now - t0) / ms);
+    const eased = t * (2 - t);
+    try {
+      el.volume = Math.max(0, Math.min(1, start + delta * eased));
+    } catch {
+      return;
+    }
+    if (t < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
 
 export function NasheedBackground({
   soundEnabled,
@@ -22,7 +45,15 @@ export function NasheedBackground({
     const el = audioRef.current;
     if (!el) return;
     el.loop = true;
-    el.volume = BG_VOLUME;
+    el.volume = getBackgroundVolume() || BG_VOLUME_IDLE;
+  }, []);
+
+  useEffect(() => {
+    return subscribeBackgroundVolume((volume) => {
+      const el = audioRef.current;
+      if (!el) return;
+      fadeTo(el, volume);
+    });
   }, []);
 
   useEffect(() => {

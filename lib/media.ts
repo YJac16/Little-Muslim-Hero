@@ -3,9 +3,12 @@
  * Filenames match what you added at repo root / `public/assets/`.
  */
 export const AUDIO = {
+  /** Compressed ~96s mono loop (was 50min / 47MB). */
   nasheedBackground: "/assets/audio/nasheed-bg.mp3",
-  /** Start / Play Again tap */
-  uiStart: "/Preview-Bismillah.mp3",
+  /** Soft whoosh on Start / Play Again */
+  uiStart: "/assets/audio/sfx/ui-whoosh.mp3",
+  uiTap: "/assets/audio/sfx/ui-tap.mp3",
+  celebrate: "/assets/audio/sfx/celebrate.mp3",
   narrationMorning:
     "/Morning-Intro-Good-morning-little-hero-When-we-wake-up-what-do-we-say.mp3",
   narrationPlay:
@@ -18,8 +21,8 @@ export const AUDIO = {
   previewBismillah: "/Preview-Bismillah.mp3",
   previewMine: "/Preview-Mine.mp3",
   previewShare: "/Preview-Share.mp3",
-  successChime: "/soft-sparkle-chime-for-correct-choices.mp3",
-  retry: "/Gentle-pop-for-retry.mp3",
+  successChime: "/assets/audio/sfx/success-chime.mp3",
+  retry: "/assets/audio/sfx/retry-pop.mp3",
   successNarrationMorning:
     "/Success-MashaAllah-Allah-loves-when-we-remember-Him.mp3",
   successNarrationPlay: "/Success-Sharing-makes-hearts-happy.mp3",
@@ -35,6 +38,8 @@ export const IMG = {
   mascotHappy: "/mascot-happy-face.png",
   mascotConfused: "/mascot-confused.png",
   mascotNeutral: "/mascot-neutral-face.png",
+  mascotRewardScene: "/mascot-reward-scene.png",
+  successEffect: "/success-effect.png",
   morningScene: "/morning-scene.png",
   playScene: "/play-scene.png",
   mealScene: "/meal-scene.png",

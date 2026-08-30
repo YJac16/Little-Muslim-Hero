@@ -2,6 +2,12 @@
   "mcpServers": {
     "vercel": {
       "url": "https://mcp.vercel.com"
+    },
+    "mobbin": {
+      "url": "https://api.mobbin.com/mcp"
+    },
+    "fish-audio": {
+      "url": "https://api.fish.audio/mcp"
     }
   }
 }

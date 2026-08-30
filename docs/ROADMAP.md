@@ -19,7 +19,7 @@ Positioning: **“The calm daily-routine game for ages 2–4 — pictures + voic
 - Parent menu **PIN** (replace “Coming soon”)
 - Persist day progress + sound in `localStorage`
 - Optional “Replay this moment” without full reset
-- Softer audio ducking (nasheed quieter under narration)
+- Softer audio ducking (nasheed quieter under narration) — done in polish pass
 - Larger focus rings for parents; honor `prefers-reduced-motion` (partially in place)
 
 ## Phase 3 — Content depth (genre table stakes)

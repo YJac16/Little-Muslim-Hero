@@ -32,6 +32,7 @@ export default {
         scaleSuccess: "scaleSuccess 0.35s ease-out",
         floatGentle: "floatGentle 4.5s ease-in-out infinite",
         drift: "drift 14s ease-in-out infinite alternate",
+        softPulse: "softPulse 1.6s ease-in-out infinite",
       },
       keyframes: {
         sparkle: {
@@ -59,6 +60,10 @@ export default {
         drift: {
           "0%": { transform: "translate3d(-8px, 0px, 0px) scale(1)" },
           "100%": { transform: "translate3d(10px, -14px, 0px) scale(1.05)" },
+        },
+        softPulse: {
+          "0%, 100%": { opacity: "1", transform: "scale(1)" },
+          "50%": { opacity: "0.88", transform: "scale(1.03)" },
         },
       },
     },

@@ -84,9 +84,14 @@ See **[docs/ROADMAP.md](docs/ROADMAP.md)** for Phases 0–6 (mobile polish → p
 
 | File | Use |
 |------|-----|
-| `nasheed-bg.mp3` | Soft looping background nasheed (play + end screens; respects Sound toggle) |
+| `nasheed-bg.mp3` | Soft ~96s mono loop (play + end; ducks under narration) |
+| `sfx/ui-whoosh.mp3` | Start / Play Again |
+| `sfx/ui-tap.mp3` | Soft UI taps |
+| `sfx/success-chime.mp3` | Correct choice |
+| `sfx/retry-pop.mp3` | Gentle retry |
+| `sfx/celebrate.mp3` | End-of-day celebration |
 
-Other narration, preview, success, and SFX clips live at the `public/` root and are wired in **`lib/media.ts`**.
+Narration and choice preview clips live at the `public/` root and are wired in **`lib/media.ts`**.
 
 ### Images
 
@@ -94,7 +99,7 @@ Scenes, choices, and mascot PNGs live at the `public/` root (wired in **`lib/med
 
 ## Parent menu
 
-**Tap and hold** the mascot (about **3 seconds**) on the start screen, in-level corner badge, or end screen to open the parent menu: jump to any part of the day, toggle sound, or reset progress.
+**Tap the mascot 5 times** (within ~1.5s) on the start screen, in-level corner badge, or end screen to open the parent menu: jump to any part of the day, toggle sound, or reset progress.
 
 ## Project structure
 
