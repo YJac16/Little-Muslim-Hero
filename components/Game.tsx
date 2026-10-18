@@ -373,7 +373,7 @@ export function Game() {
             <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center gap-4 short:gap-2 sm:gap-5">
               <div className="hero-enter flex w-full flex-col items-center text-center">
                 <LogoMultiTap onUnlock={openParent} className="mb-1">
-                  <div className="relative mx-auto h-[min(58vw,20rem)] w-[min(58vw,20rem)] animate-floatGentle short:h-36 short:w-36 sm:h-72 sm:w-72 md:h-80 md:w-80">
+                  <div className="relative mx-auto h-[min(58vw,20rem)] w-[min(58vw,20rem)] animate-floatGentle short:h-36 short:w-36 sm:h-[min(18rem,27vh)] sm:w-[min(18rem,27vh)] md:h-[min(20rem,27vh)] md:w-[min(20rem,27vh)]">
                     <div className="absolute inset-3 rounded-full bg-[#ffd36b]/45 blur-2xl" />
                     <Twinkles />
                     <div className="mascot-sway absolute inset-[8%] overflow-hidden rounded-full bg-white/50 shadow-glow ring-4 ring-white/70">
