@@ -1,4 +1,6 @@
 const cache = new Map<string, HTMLAudioElement>();
+/** Resolvers for in-flight playUrl() calls so stop*() can release awaiting code. */
+const pending = new Map<string, Set<() => void>>();
 
 /** Quiet ambient bed; ducked further under narration / SFX. */
 export const BG_VOLUME_IDLE = 0.26;
@@ -80,11 +82,19 @@ export function playUrl(
       window.clearTimeout(safety);
       audio?.removeEventListener("ended", onEnd);
       audio?.removeEventListener("error", onEnd);
+      cleanupPending();
       unduck();
       resolve();
     };
     const onEnd = () => done();
     const safety = window.setTimeout(done, 12_000);
+    let set = pending.get(src);
+    if (!set) {
+      set = new Set();
+      pending.set(src, set);
+    }
+    set.add(done);
+    const cleanupPending = () => pending.get(src)?.delete(done);
     audio.addEventListener("ended", onEnd, { once: true });
     audio.addEventListener("error", onEnd, { once: true });
     void audio.play().catch(() => done());
@@ -101,4 +111,13 @@ export function stopUrl(src: string) {
       /* ignore */
     }
   }
+  const set = pending.get(src);
+  if (set) {
+    for (const release of [...set]) release();
+  }
+}
+
+/** Stop every cached clip (used when sound is switched off mid-level). */
+export function stopAll() {
+  for (const src of [...cache.keys()]) stopUrl(src);
 }

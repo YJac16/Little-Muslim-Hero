@@ -19,8 +19,19 @@ export const AUDIO = {
   narrationBed: "/Bedtime-Intro-Before-we-sleep-we-make-our-dua.mp3",
   previewAlhamdulilah: "/Preview-Alhamdulilah.mp3",
   previewBismillah: "/Preview-Bismillah.mp3",
-  previewMine: "/Preview-Mine.mp3",
+  /**
+   * ONE wrong-answer cue ("Mine"), played on EVERY wrong pick, in every level.
+   * To swap it, replace public/assets/audio/wrong-cue.mp3 (keep < 1.5 s, gentle).
+   */
+  wrongCue: "/assets/audio/wrong-cue.mp3",
   previewShare: "/Preview-Share.mp3",
+  previewHelp: "/assets/audio/voice/Preview-Help.mp3",
+  /** PRIVATE-TEST placeholder voices (Kokoro). Replace before publishing. */
+  introGreeting: "/assets/audio/voice/Intro-Assalamu-alaikum-little-hero.mp3",
+  retryVoice: "/assets/audio/voice/Retry-Try-the-other-picture.mp3",
+  endVoice: "/assets/audio/voice/End-MashaAllah-you-did-it-little-hero.mp3",
+  cardPop: "/assets/audio/sfx/card-pop.mp3",
+  twinkle: "/assets/audio/sfx/twinkle.mp3",
   successChime: "/assets/audio/sfx/success-chime.mp3",
   retry: "/assets/audio/sfx/retry-pop.mp3",
   successNarrationMorning:

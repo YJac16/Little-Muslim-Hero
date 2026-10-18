@@ -38,7 +38,7 @@ export const levels: LevelData[] = [
       },
       {
         image: IMG.morningNeutral,
-        audio: AUDIO.previewMine,
+        audio: AUDIO.wrongCue,
         correct: false,
         label: "Hiding under the blanket",
       },
@@ -61,7 +61,7 @@ export const levels: LevelData[] = [
       },
       {
         image: IMG.playNeutral,
-        audio: AUDIO.previewMine,
+        audio: AUDIO.wrongCue,
         correct: false,
         label: "Keeping the toys",
       },
@@ -84,7 +84,7 @@ export const levels: LevelData[] = [
       },
       {
         image: IMG.mealNeutral,
-        audio: AUDIO.previewMine,
+        audio: AUDIO.wrongCue,
         correct: false,
         label: "Reaching for food quickly",
       },
@@ -94,20 +94,20 @@ export const levels: LevelData[] = [
     id: "helping",
     name: "Helping Time",
     scene: IMG.helpingScene,
-    prompt: "Someone needs help. What can we do?",
+    prompt: "Mommy needs help. What can we do?",
     narration: AUDIO.narrationHelping,
     successNarration: AUDIO.successNarrationHelping,
     successCaption: "Helping is from good character.",
     choices: [
       {
         image: IMG.helpingGood,
-        audio: AUDIO.previewShare,
+        audio: AUDIO.previewHelp,
         correct: true,
         label: "Helping with the chore",
       },
       {
         image: IMG.helpingNeutral,
-        audio: AUDIO.previewMine,
+        audio: AUDIO.wrongCue,
         correct: false,
         label: "Playing alone nearby",
       },
@@ -130,7 +130,7 @@ export const levels: LevelData[] = [
       },
       {
         image: IMG.bedtimeNeutral,
-        audio: AUDIO.previewMine,
+        audio: AUDIO.wrongCue,
         correct: false,
         label: "Jumping on the bed",
       },

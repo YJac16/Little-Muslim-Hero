@@ -1,16 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type CSSProperties,
-} from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { ChoiceButton } from "@/components/ChoiceButton";
-import { playUrl, stopUrl } from "@/lib/audio";
+import { playUrl, stopAll, stopUrl } from "@/lib/audio";
+import { Burst } from "@/components/Burst";
 import type { LevelData } from "@/lib/levels";
 import { AUDIO, IMG } from "@/lib/media";
 
@@ -21,6 +15,8 @@ type LevelProps = {
   soundEnabled: boolean;
   levelIndex: number;
   totalLevels: number;
+  /** Greeting played once before the first question (after Start). */
+  introVoice?: string;
   onComplete: () => void;
 };
 
@@ -60,6 +56,7 @@ export function Level({
   soundEnabled,
   levelIndex,
   totalLevels,
+  introVoice,
   onComplete,
 }: LevelProps) {
   const id = useId();
@@ -69,60 +66,75 @@ export function Level({
   const [selectedWrongIndex, setSelectedWrongIndex] = useState<number | null>(
     null,
   );
+  const [burstKey, setBurstKey] = useState(0);
   const completedRef = useRef(false);
-  const narrPlayedRef = useRef(false);
   const successTimerRef = useRef<number | null>(null);
   const phaseRef = useRef<Phase>("narration");
+  const wrongCountRef = useRef(0);
+  const soundRef = useRef(soundEnabled);
+  const introRef = useRef(introVoice);
   phaseRef.current = phase;
+  soundRef.current = soundEnabled;
 
+  // One run per moment: optional greeting -> question -> "your turn".
   useEffect(() => {
-    narrPlayedRef.current = false;
     completedRef.current = false;
+    wrongCountRef.current = 0;
     setPhase("narration");
     setShakeWrong(false);
     setHighlightCorrect(false);
     setSelectedWrongIndex(null);
-    return () => {
-      if (successTimerRef.current !== null) {
-        window.clearTimeout(successTimerRef.current);
-        successTimerRef.current = null;
-      }
-      stopUrl(level.narration);
-      stopUrl(level.successNarration);
-      stopUrl(level.choices[0].audio);
-      stopUrl(level.choices[1].audio);
-    };
-  }, [level]);
-
-  useEffect(() => {
-    if (narrPlayedRef.current) return;
-    narrPlayedRef.current = true;
 
     let cancelled = false;
+    const intro = introRef.current;
 
     const run = async () => {
-      if (soundEnabled) {
-        await playUrl(level.narration, soundEnabled, 1);
+      if (soundRef.current) {
+        if (intro) await playUrl(intro, true, 1);
+        if (cancelled) return;
+        await playUrl(level.narration, soundRef.current, 1);
       } else {
         await new Promise((resolve) => setTimeout(resolve, 900));
       }
       if (cancelled) return;
       setPhase("ready");
-      void playUrl(AUDIO.uiTap, soundEnabled, 0.55);
+      void playUrl(AUDIO.cardPop, soundRef.current, 0.6, { duck: false });
     };
-
     void run();
+
     return () => {
       cancelled = true;
+      if (successTimerRef.current !== null) {
+        window.clearTimeout(successTimerRef.current);
+        successTimerRef.current = null;
+      }
+      if (intro) stopUrl(intro);
       stopUrl(level.narration);
-      narrPlayedRef.current = false;
+      stopUrl(level.successNarration);
+      stopUrl(level.choices[0].audio);
+      stopUrl(level.choices[1].audio);
+      stopUrl(AUDIO.wrongCue);
+      stopUrl(AUDIO.retryVoice);
     };
-  }, [level, soundEnabled]);
+  }, [level]);
+
+  // Switching sound off mid-moment silences it right away instead of replaying.
+  useEffect(() => {
+    if (!soundEnabled) stopAll();
+  }, [soundEnabled]);
+
+  const hearAgain = useCallback(async () => {
+    const p = phaseRef.current;
+    if (p !== "ready") return;
+    void playUrl(AUDIO.uiTap, soundRef.current, 0.45);
+    stopUrl(level.narration);
+    await playUrl(level.narration, soundRef.current, 1);
+  }, [level]);
 
   const handleResolved = useCallback(
     async (index: number, correct: boolean) => {
       const currentPhase = phaseRef.current;
-      if (currentPhase !== "ready" && currentPhase !== "retry") return;
+      if (currentPhase !== "ready") return;
       if (completedRef.current) return;
 
       const choice = level.choices[index];
@@ -134,8 +146,10 @@ export function Level({
         setPhase("success");
         setHighlightCorrect(true);
         setSelectedWrongIndex(null);
+        setBurstKey((k) => k + 1);
         void (async () => {
           await playUrl(choice.audio, soundEnabled, 0.95);
+          void playUrl(AUDIO.twinkle, soundEnabled, 0.7, { duck: false });
           await playUrl(AUDIO.successChime, soundEnabled, 1);
           await playUrl(level.successNarration, soundEnabled, 1);
           successTimerRef.current = window.setTimeout(() => {
@@ -146,12 +160,19 @@ export function Level({
         return;
       }
 
+      // Wrong pick: quick, kind "Mine" cue EVERY time (single swappable file),
+      // a soft sway, and a gentle spoken hint the first time in each moment.
+      wrongCountRef.current += 1;
       setPhase("retry");
       setSelectedWrongIndex(index);
       setShakeWrong(true);
-      await playUrl(choice.audio, soundEnabled, 0.95);
-      await playUrl(AUDIO.retry, soundEnabled, 1);
-      await new Promise((resolve) => setTimeout(resolve, 360));
+      await playUrl(AUDIO.wrongCue, soundEnabled, 0.95);
+      if (wrongCountRef.current === 1) {
+        await playUrl(AUDIO.retryVoice, soundEnabled, 0.95);
+      } else {
+        await playUrl(AUDIO.retry, soundEnabled, 0.8);
+      }
+      await new Promise((resolve) => setTimeout(resolve, 200));
       setShakeWrong(false);
       setSelectedWrongIndex(null);
       setPhase("ready");
@@ -178,7 +199,7 @@ export function Level({
 
   return (
     <div
-      className="flex h-full max-h-[100dvh] flex-col pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-[max(4.25rem,env(safe-area-inset-top))]"
+      className="level-enter flex h-full max-h-[100dvh] flex-col pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-[max(4.25rem,env(safe-area-inset-top))]"
       role="region"
       aria-labelledby={`${id}-scene`}
       aria-describedby={`${id}-caption`}
@@ -187,11 +208,12 @@ export function Level({
         {level.name}
       </span>
 
-      <div className="mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col gap-2 px-3 sm:gap-3 sm:px-5 lg:px-8">
+      <div className="level-body mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col gap-2 px-3 sm:gap-3 sm:px-5 lg:px-8">
+        <div className="level-main flex min-h-0 flex-1 flex-col gap-2 sm:gap-3">
         {/* Scene — atmosphere, not the main tap target */}
         <div
           className={[
-            "relative min-h-0 flex-1 overflow-hidden rounded-[28px] bg-black/5 shadow-glow sm:rounded-[32px]",
+            "scene-box scene-shine relative min-h-0 flex-1 overflow-hidden rounded-[28px] bg-black/5 shadow-glow sm:rounded-[32px]",
             "max-h-[40vh] sm:max-h-[42vh] short:max-h-[34vh]",
             showSparkles ? "animate-scaleSuccess" : "",
             waiting ? "listen-pulse-ring" : "",
@@ -203,7 +225,7 @@ export function Level({
             src={level.scene}
             alt=""
             fill
-            className="object-cover object-center"
+            className="scene-kenburns object-cover object-center"
             sizes="(max-width: 1024px) 100vw, 960px"
             priority
           />
@@ -217,7 +239,10 @@ export function Level({
           </div>
 
           {emotionSrc && (
-            <div className="pointer-events-none absolute bottom-2 right-2 h-16 w-16 animate-scaleSuccess sm:h-20 sm:w-20">
+            <div
+              key={emotionSrc}
+              className="mascot-pop pointer-events-none absolute bottom-2 right-2 h-16 w-16 sm:h-20 sm:w-20"
+            >
               <Image
                 src={emotionSrc}
                 alt=""
@@ -227,7 +252,7 @@ export function Level({
             </div>
           )}
 
-          {showSparkles && <SparkleOverlay />}
+          {showSparkles && <Burst key={burstKey} mode="burst" count={20} />}
         </div>
 
         {/* Caption + phase cue — readable without audio */}
@@ -277,7 +302,8 @@ export function Level({
             </p>
             <p
               id={`${id}-caption`}
-              className="storybook-text text-base font-bold leading-snug text-[#21412b] sm:text-lg md:text-xl"
+              key={caption}
+              className="caption-swap storybook-text text-base font-bold leading-snug text-[#21412b] sm:text-lg md:text-xl"
             >
               {caption}
             </p>
@@ -294,11 +320,30 @@ export function Level({
               </div>
             )}
           </div>
+          {phase === "ready" && soundEnabled && (
+            <button
+              type="button"
+              onClick={() => void hearAgain()}
+              aria-label="Hear the question again"
+              className="hear-again flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-[#ef8b48]/40 bg-white/90 text-[#ef8b48] shadow-soft touch-manipulation sm:h-14 sm:w-14"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                className="h-7 w-7"
+                fill="currentColor"
+                aria-hidden
+              >
+                <path d="M3 10v4h3.2L11 18.8V5.2L6.2 10H3zm11.5 2a3.5 3.5 0 0 0-1.8-3.1v6.2A3.5 3.5 0 0 0 14.5 12zm0-7.2v2.1a5.6 5.6 0 0 1 0 10.2v2.1a7.7 7.7 0 0 0 0-14.4z" />
+              </svg>
+            </button>
+          )}
+        </div>
+
         </div>
 
         {/* Choice tray — large taps, aspect matches landscape art */}
-        <div className="choice-tray relative shrink-0">
-          <div className="grid grid-cols-2 items-center gap-3 sm:gap-4 md:gap-5 lg:gap-6">
+        <div className="choice-tray level-side relative shrink-0">
+          <div className="choice-grid grid grid-cols-2 items-center gap-3 sm:gap-4 md:gap-5 lg:gap-6">
             <ChoiceButton
               image={level.choices[0].image}
               label={level.choices[0].label}
@@ -307,6 +352,8 @@ export function Level({
               waiting={waiting}
               isHighlighted={highlightCorrect && level.choices[0].correct}
               shouldShake={shakeWrong && selectedWrongIndex === 0}
+              order={0}
+              bob={phase === "ready"}
               onResolved={(ok) => void handleResolved(0, ok)}
             />
             <ChoiceButton
@@ -317,45 +364,13 @@ export function Level({
               waiting={waiting}
               isHighlighted={highlightCorrect && level.choices[1].correct}
               shouldShake={shakeWrong && selectedWrongIndex === 1}
+              order={1}
+              bob={phase === "ready"}
               onResolved={(ok) => void handleResolved(1, ok)}
             />
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-function SparkleOverlay() {
-  const dots = Array.from({ length: 14 }, (_, i) => ({
-    key: i,
-    left: `${8 + ((i * 17) % 84)}%`,
-    top: `${10 + ((i * 23) % 75)}%`,
-    tx: `${-30 + (i % 5) * 15}px`,
-    ty: `${-40 + (i % 4) * 12}px`,
-    delay: `${i * 45}ms`,
-  }));
-
-  return (
-    <div
-      className="pointer-events-none absolute inset-0 animate-sparkle bg-gradient-to-b from-accent/20 to-transparent"
-      aria-hidden
-    >
-      {dots.map((dot) => (
-        <span
-          key={dot.key}
-          className="sparkle-particle"
-          style={
-            {
-              left: dot.left,
-              top: dot.top,
-              "--tx": dot.tx,
-              "--ty": dot.ty,
-              animationDelay: dot.delay,
-            } as CSSProperties
-          }
-        />
-      ))}
     </div>
   );
 }

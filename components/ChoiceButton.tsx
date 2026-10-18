@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useState, type CSSProperties } from "react";
 
 export type ChoiceButtonProps = {
   image: string;
@@ -11,6 +11,10 @@ export type ChoiceButtonProps = {
   waiting: boolean;
   isHighlighted: boolean;
   shouldShake: boolean;
+  /** Stagger index for the entrance pop. */
+  order?: number;
+  /** Gentle idle bob while it is the child's turn. */
+  bob?: boolean;
   onResolved: (correct: boolean) => void;
 };
 
@@ -40,6 +44,8 @@ export function ChoiceButton({
   waiting,
   isHighlighted,
   shouldShake,
+  order = 0,
+  bob = false,
   onResolved,
 }: ChoiceButtonProps) {
   const [isActing, setIsActing] = useState(false);
@@ -54,12 +60,17 @@ export function ChoiceButton({
   const locked = disabled || waiting || isActing;
 
   return (
+    <div
+      className="choice-pop"
+      style={{ "--pop-delay": `${300 + order * 160}ms` } as CSSProperties}
+    >
     <button
       type="button"
       onClick={handleTap}
       disabled={locked}
       aria-label={label}
       aria-disabled={locked}
+      style={{ "--bob-delay": `${order * 650}ms` } as CSSProperties}
       className={[
         /* Match landscape choice art (~4:3). Avoid h-full stretch → tall
            portrait frames that object-cover then side-crops. */
@@ -67,14 +78,15 @@ export function ChoiceButton({
         "sm:max-h-[min(46vh,24rem)]",
         "active:scale-[0.97]",
         isHighlighted
-          ? "scale-[1.02] border-[#ffd36b] ring-4 ring-[#ffd36b]/80 ring-offset-2 ring-offset-cream shadow-glow"
+          ? "choice-correct border-[#ffd36b] ring-4 ring-[#ffd36b]/80 ring-offset-2 ring-offset-cream shadow-glow"
           : "",
-        shouldShake ? "animate-bounceRetry" : "",
+        shouldShake ? "choice-soft-no border-[#ef8b48]/70" : "",
+        bob && !locked ? "choice-bob" : "",
         waiting
           ? "cursor-wait"
           : locked
             ? "opacity-75"
-            : "hover:-translate-y-1 hover:shadow-glow",
+            : "hover:shadow-glow",
       ]
         .filter(Boolean)
         .join(" ")}
@@ -107,5 +119,6 @@ export function ChoiceButton({
         </div>
       )}
     </button>
+    </div>
   );
 }
