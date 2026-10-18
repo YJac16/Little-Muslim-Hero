@@ -3,10 +3,11 @@
 import Image from "next/image";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { ChoiceButton } from "@/components/ChoiceButton";
-import { playUrl, preloadUrls, stopAll, stopUrl } from "@/lib/audio";
+import { playUrl, preloadUrls, startAmbience, stopAll, stopUrl } from "@/lib/audio";
 import { Burst } from "@/components/Burst";
 import type { LevelData } from "@/lib/levels";
-import { AUDIO, IMG } from "@/lib/media";
+import { AMBIENCE, AMBIENCE_ENABLED, AMBIENCE_VOLUME, AUDIO, IMG } from "@/lib/media";
+import { resolveWrongCues } from "@/lib/wrongCues";
 
 type Phase = "narration" | "ready" | "success" | "retry";
 
@@ -104,7 +105,7 @@ export function Level({
     let cancelled = false;
     const intro = introRef.current;
     // Warm the wrong-answer cues so the first wrong tap answers instantly.
-    preloadUrls(level.wrongCues);
+    preloadUrls(resolveWrongCues(level.id));
 
     const run = async () => {
       if (soundRef.current) {
@@ -131,10 +132,16 @@ export function Level({
       stopUrl(level.successNarration);
       stopUrl(level.choices[0].audio);
       stopUrl(level.choices[1].audio);
-      for (const cue of level.wrongCues) stopUrl(cue);
+      for (const cue of resolveWrongCues(level.id)) stopUrl(cue);
       stopUrl(AUDIO.retryVoice);
     };
   }, [level]);
+
+  // Quiet per-moment ambience bed (synthesized, ducks under voices). Off when sound is off.
+  useEffect(() => {
+    if (!soundEnabled || !AMBIENCE_ENABLED) return;
+    return startAmbience(AMBIENCE[level.id], AMBIENCE_VOLUME);
+  }, [level, soundEnabled]);
 
   // Switching sound off mid-moment silences it right away instead of replaying.
   useEffect(() => {
@@ -205,7 +212,8 @@ export function Level({
       // the tapped card. Taps re-open as soon as the cue ends; the spoken hint plays
       // over the pulse on the other picture (first miss only).
       wrongCountRef.current += 1;
-      const cue = level.wrongCues[(wrongCountRef.current - 1) % level.wrongCues.length];
+      const cues = resolveWrongCues(level.id);
+      const cue = cues[(wrongCountRef.current - 1) % cues.length];
       setPhase("retry");
       setHintPulse(false);
       setSelectedWrongIndex(index);

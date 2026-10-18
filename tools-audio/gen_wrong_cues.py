@@ -10,7 +10,7 @@ def note(freq, dur, vol=1.0, glide=0.0, decay=6.5):
     f = freq * (1 + glide * t / dur)                       # slight downward droop = "aww"
     ph = 2 * np.pi * np.cumsum(f) / SR
     s = np.sin(ph) + 0.28 * np.sin(2 * ph) * np.exp(-t * 14) + 0.10 * np.sin(4.1 * ph) * np.exp(-t * 30)
-    env = np.exp(-t * decay) * np.minimum(1, t / 0.008) * np.minimum(1, (dur - t) / 0.06)
+    env = np.exp(-t * decay) * np.minimum(1, t / 0.014) * np.minimum(1, (dur - t) / 0.06)
     return vol * s * env
 
 def seq(parts, total):

@@ -137,3 +137,44 @@ export function stopUrl(src: string) {
 export function stopAll() {
   for (const src of [...cache.keys()]) stopUrl(src);
 }
+
+/**
+ * Looping per-moment ambience bed. Fades in, follows the nasheed's ducking (so it sits back
+ * under every voice line), fades out and pauses on stop. Returns the stop function.
+ */
+export function startAmbience(src: string, baseVolume: number): () => void {
+  if (typeof window === "undefined") return () => undefined;
+  const el = new Audio(src);
+  el.loop = true;
+  el.preload = "auto";
+  el.volume = 0;
+  let stopped = false;
+  let raf = 0;
+  const fadeTo = (target: number, ms: number, then?: () => void) => {
+    cancelAnimationFrame(raf);
+    const from = el.volume;
+    const t0 = performance.now();
+    const step = (now: number) => {
+      const t = Math.min(1, (now - t0) / ms);
+      try {
+        el.volume = Math.max(0, Math.min(1, from + (target - from) * t));
+      } catch {
+        return;
+      }
+      if (t < 1) raf = requestAnimationFrame(step);
+      else then?.();
+    };
+    raf = requestAnimationFrame(step);
+  };
+  const unsubscribe = subscribeBackgroundVolume((bg) => {
+    if (stopped) return;
+    fadeTo(baseVolume * (bg / BG_VOLUME_IDLE), 350);
+  });
+  void el.play().catch(() => undefined);
+  return () => {
+    if (stopped) return;
+    stopped = true;
+    unsubscribe();
+    fadeTo(0, 500, () => el.pause());
+  };
+}

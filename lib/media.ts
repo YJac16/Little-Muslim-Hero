@@ -14,6 +14,22 @@ export const WRONG = {
   sigh: "/assets/audio/wrong/wrong-sigh.mp3",
 } as const;
 
+/**
+ * PER-MOMENT AMBIENCE (very quiet synthesized loops, CC0): one file per moment in
+ * public/assets/audio/ambience/. Set AMBIENCE_ENABLED = false to switch it off everywhere,
+ * lower AMBIENCE_VOLUME to make it quieter (0..1, relative to the file; the file itself is
+ * about 10 dB under the nasheed, and it ducks under every voice line like the nasheed does).
+ */
+export const AMBIENCE_ENABLED = true;
+export const AMBIENCE_VOLUME = 0.35;
+export const AMBIENCE = {
+  morning: "/assets/audio/ambience/morning.mp3",
+  play: "/assets/audio/ambience/play.mp3",
+  meal: "/assets/audio/ambience/meal.mp3",
+  helping: "/assets/audio/ambience/helping.mp3",
+  bedtime: "/assets/audio/ambience/bedtime.mp3",
+} as const;
+
 export const AUDIO = {
   /** Compressed ~96s mono loop (was 50min / 47MB). */
   nasheedBackground: "/assets/audio/nasheed-bg.mp3",

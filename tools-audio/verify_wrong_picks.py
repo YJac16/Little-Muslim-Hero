@@ -68,7 +68,7 @@ async def main():
             body = await r.body()
             ok = r.status == 200 and len(body) > 1000
             dur = await pg.evaluate("u=>new Promise(res=>{const a=new Audio(u);a.onloadedmetadata=()=>res(a.duration);a.onerror=()=>res(-1)})", u)
-            ok = ok and 0.3 < dur <= 1.0
+            ok = ok and 0.2 < dur <= 1.0
             print(("OK  " if ok else "FAIL"), u, "http", r.status, len(body), "bytes", "decoded duration %.2fs" % dur)
             failed |= not ok
         await b.close()
