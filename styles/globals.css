@@ -639,3 +639,34 @@ body::after {
     object-position: var(--focus, 50% 50%) !important;
   }
 }
+
+/* Scene frame: fills the box on portrait; in landscape it is exactly the art's
+   shape (2256x1648) centred on the blurred backdrop, so overlays sit on the art. */
+.scene-frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+@media (orientation: landscape) and (min-width: 640px) {
+  .scene-box {
+    container-type: size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .scene-frame {
+    position: relative;
+    inset: auto;
+    flex: none;
+    width: min(100cqw, calc(100cqh * 1.3689));
+    aspect-ratio: 2256 / 1648;
+    border-radius: 18px;
+    box-shadow: 0 6px 24px rgba(33, 65, 43, 0.18);
+  }
+  .scene-backdrop {
+    position: absolute;
+  }
+  .scene-fg {
+    object-fit: cover !important;
+  }
+}

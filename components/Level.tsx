@@ -40,15 +40,22 @@ function EarIcon({ className }: { className?: string }) {
   );
 }
 
-function HandIcon({ className }: { className?: string }) {
+/** Finger tapping with ripples: "your turn - tap". */
+function TapIcon({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
       className={className}
-      fill="currentColor"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       aria-hidden
     >
-      <path d="M8.5 21a2.5 2.5 0 0 1-2.5-2.5V11l-1.2.6A1.8 1.8 0 0 1 2.2 9.7L7.6 4.8A3 3 0 0 1 9.8 4H11a2 2 0 0 1 2 2v.5A2 2 0 0 1 15.5 8h.2A2.3 2.3 0 0 1 18 10.3V18a3 3 0 0 1-3 3H8.5z" />
+      <path d="M8.2 6.2a4.2 4.2 0 1 1 7.6 0" />
+      <path d="M9 12V6.8a1.6 1.6 0 0 1 3.2 0V12" />
+      <path d="M12.2 11.2l4.3.9a2 2 0 0 1 1.5 2.4l-.7 4.1a2 2 0 0 1-2 1.6h-3.6a2 2 0 0 1-1.6-.8L7 16.2a1.5 1.5 0 0 1 2.3-1.9L9 14.1" />
     </svg>
   );
 }
@@ -167,6 +174,7 @@ export function Level({
 
       const choice = level.choices[index];
       stopUrl(level.narration);
+      stopUrl(AUDIO.retryVoice);
       void playUrl(AUDIO.uiTap, soundEnabled, 0.5);
 
       if (correct) {
@@ -191,21 +199,25 @@ export function Level({
       }
 
       // Wrong pick: quick, kind "Mine" cue EVERY time (single swappable file),
-      // a soft sway, and a gentle spoken hint the first time in each moment.
+      // a soft sway on the tapped card. Taps re-open as soon as "Mine" ends; the
+      // spoken hint plays over the pulse on the other picture (first miss only).
       wrongCountRef.current += 1;
       setPhase("retry");
+      setHintPulse(false);
       setSelectedWrongIndex(index);
       setShakeWrong(true);
       await playUrl(level.wrongCue ?? AUDIO.wrongCue, soundEnabled, 0.95);
-      if (wrongCountRef.current === 1) {
-        await playUrl(AUDIO.retryVoice, soundEnabled, 0.95);
-      } else {
-        await playUrl(AUDIO.retry, soundEnabled, 0.8);
-      }
-      await new Promise((resolve) => setTimeout(resolve, 200));
+      if (completedRef.current) return;
       setShakeWrong(false);
       setSelectedWrongIndex(null);
       setPhase("ready");
+      setHintPulse(true);
+      window.setTimeout(() => setHintPulse(false), 3600);
+      if (wrongCountRef.current === 1) {
+        void playUrl(AUDIO.retryVoice, soundEnabled, 0.95);
+      } else {
+        void playUrl(AUDIO.retry, soundEnabled, 0.8);
+      }
     },
     [level, onComplete, soundEnabled],
   );
@@ -259,6 +271,7 @@ export function Level({
             sizes="(max-width: 1024px) 100vw, 960px"
             aria-hidden
           />
+          <div className="scene-frame">
           <Image
             src={level.scene}
             alt=""
@@ -280,14 +293,6 @@ export function Level({
             </div>
           )}
 
-          <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-2.5 sm:p-3">
-            <div className="rounded-full bg-black/45 px-3.5 py-1.5 backdrop-blur-md">
-              <p className="text-sm font-bold text-white sm:text-base">
-                {levelIndex + 1}/{totalLevels}
-              </p>
-            </div>
-          </div>
-
           {emotionSrc && (
             <div
               key={emotionSrc}
@@ -303,6 +308,14 @@ export function Level({
           )}
 
           {showSparkles && <Burst key={burstKey} mode="burst" count={20} />}
+          </div>
+          <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-2.5 sm:p-3">
+            <div className="rounded-full bg-black/45 px-3.5 py-1.5 backdrop-blur-md">
+              <p className="text-sm font-bold text-white sm:text-base">
+                {levelIndex + 1}/{totalLevels}
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Caption + phase cue — readable without audio */}
@@ -334,7 +347,7 @@ export function Level({
             ) : phase === "success" ? (
               <span className="text-2xl font-black leading-none">★</span>
             ) : (
-              <HandIcon className="h-7 w-7 sm:h-8 sm:w-8" />
+              <TapIcon className="h-7 w-7 sm:h-8 sm:w-8" />
             )}
           </div>
           <div className="min-w-0 flex-1 text-left">

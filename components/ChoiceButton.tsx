@@ -90,7 +90,7 @@ export function ChoiceButton({
         isHighlighted
           ? "choice-correct border-[#ffd36b] ring-4 ring-[#ffd36b]/80 ring-offset-2 ring-offset-cream shadow-glow"
           : "",
-        shouldShake ? "choice-soft-no border-[#ef8b48]/70" : "",
+        shouldShake ? "choice-soft-no border-[#ef8b48]/70 saturate-50" : "",
         hint && !locked ? "choice-hint" : bob && !locked ? "choice-bob" : "",
         waiting
           ? "cursor-wait"
