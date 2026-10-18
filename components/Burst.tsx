@@ -46,8 +46,11 @@ export function Burst({
       color: COLORS[i % COLORS.length],
       size: 24 + ((i * 7) % 24),
       style: {
-        "--dx": `${Math.cos(angle) * dist}px`,
-        "--dy": `${Math.sin(angle) * dist - 20}px`,
+        // Fountain from the bottom corners, rising and spreading to the sides,
+        // so the face in the middle of the scene stays clear.
+        "--sx": i % 2 === 0 ? `${6 + ((i * 11) % 14)}%` : `${80 + ((i * 7) % 14)}%`,
+        "--dx": `${(i % 2 === 0 ? 1 : -1) * (20 + ((i * 17) % 90)) + Math.cos(angle) * 20}px`,
+        "--dy": `${-(150 + ((i * 41) % 190))}px`,
         "--rot": `${(i % 2 ? 1 : -1) * (120 + ((i * 53) % 220))}deg`,
         "--delay": `${(i % 6) * 40}ms`,
         "--left": `${4 + ((i * 29) % 92)}%`,

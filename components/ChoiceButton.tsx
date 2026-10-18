@@ -17,6 +17,7 @@ export type ChoiceButtonProps = {
   bob?: boolean;
   /** Pulse to help a stuck child. */
   hint?: boolean;
+  focus?: string;
   onResolved: (correct: boolean) => void;
 };
 
@@ -49,6 +50,7 @@ export function ChoiceButton({
   order = 0,
   bob = false,
   hint = false,
+  focus,
   onResolved,
 }: ChoiceButtonProps) {
   const [isActing, setIsActing] = useState(false);
@@ -65,7 +67,7 @@ export function ChoiceButton({
   return (
     <div
       className="choice-pop"
-      style={{ "--pop-delay": `${300 + order * 160}ms` } as CSSProperties}
+      style={{ "--pop-delay": `300ms` } as CSSProperties}
     >
     <button
       type="button"
@@ -73,11 +75,16 @@ export function ChoiceButton({
       disabled={locked}
       aria-label={label}
       aria-disabled={locked}
-      style={{ "--bob-delay": `${order * 650}ms` } as CSSProperties}
+      style={
+        {
+          "--bob-delay": `${order * 650}ms`,
+          "--focus": focus ?? "50% 50%",
+        } as CSSProperties
+      }
       className={[
         /* Match landscape choice art (~4:3). Avoid h-full stretch → tall
            portrait frames that object-cover then side-crops. */
-        "choice-card group relative aspect-[4/3] w-full max-h-[min(42vh,20rem)] select-none overflow-hidden rounded-[28px] border-[3px] border-white bg-[#fff8e7] shadow-softBlue transition-all duration-200 touch-manipulation",
+        "choice-card group relative aspect-[4/3] w-full max-h-[min(42vh,20rem)] select-none overflow-hidden rounded-[28px] border-[3px] border-white bg-[#fff8e7] shadow-softBlue outline outline-1 -outline-offset-4 outline-[#21412b]/15 transition-all duration-200 touch-manipulation",
         "sm:max-h-[min(46vh,24rem)]",
         "active:scale-[0.97]",
         isHighlighted

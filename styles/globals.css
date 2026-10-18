@@ -335,9 +335,9 @@ body::after {
   filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.18));
 }
 .burst-burst .burst-piece {
-  left: 50%;
-  top: 55%;
-  animation: burstOut 2.2s cubic-bezier(0.17, 0.84, 0.32, 1) var(--delay) both;
+  left: var(--sx);
+  top: 92%;
+  animation: burstOut 2.4s cubic-bezier(0.17, 0.84, 0.32, 1) calc(var(--delay) + 450ms) both;
 }
 .burst-fall .burst-piece {
   left: var(--left);
@@ -461,7 +461,7 @@ body::after {
 }
 @keyframes captionSwap {
   from {
-    opacity: 0;
+    opacity: 0.25;
     transform: translateY(6px);
   }
   to {
@@ -583,16 +583,14 @@ body::after {
 
 /* Scene reacts to a right pick: crossfade to the chosen picture. */
 .scene-reveal {
-  animation: sceneReveal 0.9s ease-out both;
+  animation: sceneReveal 0.45s ease-out both;
 }
 @keyframes sceneReveal {
   from {
     opacity: 0;
-    transform: scale(1.04);
   }
   to {
     opacity: 1;
-    transform: scale(1);
   }
 }
 
@@ -620,5 +618,24 @@ body::after {
   }
   .choice-img {
     object-fit: cover !important;
+  }
+}
+
+/* Backdrop only matters when the scene is letterboxed (landscape). */
+.scene-backdrop {
+  display: none;
+}
+@media (orientation: landscape) and (min-width: 640px) {
+  .scene-backdrop {
+    display: block;
+    opacity: 0.9;
+  }
+  .scene-fg {
+    object-fit: contain !important;
+  }
+}
+@media (max-width: 640px) and (orientation: portrait) {
+  .choice-img {
+    object-position: var(--focus, 50% 50%) !important;
   }
 }

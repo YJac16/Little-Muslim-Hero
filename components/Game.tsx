@@ -414,7 +414,7 @@ export function Game() {
                 <button
                   type="button"
                   onClick={startGame}
-                  className="cta-glow relative z-20 w-full rounded-[28px] border border-white/50 bg-gradient-to-r from-[#2e8b4a] to-[#3fa85a] px-6 py-5 text-2xl font-bold text-white shadow-soft transition-transform active:scale-[0.99] min-h-[96px] short:min-h-[84px] sm:min-h-[108px] touch-manipulation"
+                  className="cta-glow relative z-20 w-full rounded-[28px] border border-white/50 bg-gradient-to-r from-[#2e8b4a] to-[#35995a] px-6 py-5 text-2xl font-bold text-white shadow-soft transition-transform active:scale-[0.99] min-h-[96px] short:min-h-[84px] sm:min-h-[108px] touch-manipulation"
                 >
                   Start the Day
                 </button>
@@ -577,7 +577,7 @@ export function Game() {
             <button
               type="button"
               onClick={playAgain}
-              className="cta-glow relative z-20 hero-enter-delay mt-6 w-full max-w-lg rounded-[28px] border border-white/50 bg-gradient-to-r from-[#2b86c9] to-[#4aa3e0] px-6 py-5 text-xl font-bold text-white shadow-softBlue transition-transform active:scale-[0.99] min-h-[96px] short:mt-4 short:min-h-[84px] sm:mt-8 sm:min-h-[108px] touch-manipulation"
+              className="cta-glow relative z-20 hero-enter-delay mt-6 w-full max-w-lg rounded-[28px] border border-white/50 bg-gradient-to-r from-[#2b7fc2] to-[#3b92d0] px-6 py-5 text-xl font-bold text-white shadow-softBlue transition-transform active:scale-[0.99] min-h-[96px] short:mt-4 short:min-h-[84px] sm:mt-8 sm:min-h-[108px] touch-manipulation"
             >
               Play Again
             </button>

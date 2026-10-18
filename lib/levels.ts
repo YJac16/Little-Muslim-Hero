@@ -6,6 +6,8 @@ export type LevelChoice = {
   correct: boolean;
   /** Neutral picture description — must not reveal which answer is right. */
   label: string;
+  /** CSS object-position for the square portrait crop (keeps the child in frame). */
+  focus?: string;
 };
 
 export type LevelData = {
@@ -43,6 +45,7 @@ export const levels: LevelData[] = [
         audio: AUDIO.wrongCue,
         correct: false,
         label: "Hiding under the blanket",
+        focus: "50% 72%",
       },
     ],
   },
@@ -66,6 +69,7 @@ export const levels: LevelData[] = [
         audio: AUDIO.wrongCue,
         correct: false,
         label: "Keeping the toys",
+        focus: "50% 35%",
       },
     ],
   },
@@ -112,6 +116,7 @@ export const levels: LevelData[] = [
         audio: AUDIO.wrongCue,
         correct: false,
         label: "Playing alone nearby",
+        focus: "50% 55%",
       },
     ],
   },
@@ -135,6 +140,7 @@ export const levels: LevelData[] = [
         audio: AUDIO.wrongCue,
         correct: false,
         label: "Jumping on the bed",
+        focus: "50% 22%",
       },
     ],
   },

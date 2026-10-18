@@ -255,7 +255,15 @@ export function Level({
             src={level.scene}
             alt=""
             fill
-            className="scene-kenburns object-cover object-[center_30%]"
+            className="scene-backdrop object-cover object-center blur-xl scale-110"
+            sizes="(max-width: 1024px) 100vw, 960px"
+            aria-hidden
+          />
+          <Image
+            src={level.scene}
+            alt=""
+            fill
+            className="scene-kenburns scene-fg object-cover object-[center_30%]"
             sizes="(max-width: 1024px) 100vw, 960px"
             priority
           />
@@ -266,7 +274,7 @@ export function Level({
                 src={level.choices[wonIndex].image}
                 alt=""
                 fill
-                className="object-cover object-[center_30%]"
+                className="scene-fg object-cover object-[center_30%]"
                 sizes="(max-width: 1024px) 100vw, 960px"
               />
             </div>
@@ -356,9 +364,7 @@ export function Level({
                   <i />
                   <i />
                 </span>
-                <span className="text-sm font-semibold text-[#ef8b48]">
-                  Please wait…
-                </span>
+                <span className="sr-only">Please wait</span>
               </div>
             )}
           </div>
@@ -405,6 +411,7 @@ export function Level({
                 order={pos}
                 bob={phase === "ready"}
                 hint={hintPulse && level.choices[idx].correct}
+                focus={level.choices[idx].focus}
                 onResolved={(ok) => void handleResolved(idx, ok)}
               />
             ))}
