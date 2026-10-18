@@ -29,6 +29,8 @@ Noise: the recordings sit on a quiet floor (-50 to -70 dBFS between words); no h
 voice -20 (x0.95 to 1.0) | wrong cue -21 | success chime -26 | celebrate -27 | twinkle -29.5 | nasheed -34 idle, -44 under voice | ambience -39 idle, -49 under voice.
 The voice is always the loudest thing; sound effects sit 6 to 10 dB below it; beds 14 to 19 dB below.
 
+Note on brightness: note content of the synthesized sounds is mostly under 5 kHz; the celebrate and twinkle bells have a few quiet partials near 7 kHz. The wrong cues, tap and bedtime pad are low in pitch (550 Hz centroid, 110 Hz pad): on a phone speaker the pad will be barely audible, the cues stay audible because their notes sit at 390 to 780 Hz. **Test on a real phone speaker.**
+
 ## Gaps found and fixed
 - End screen: celebration was 0.7 s and inaudible (-50 LUFS). Fixed.
 - Per-moment ambience missing. Added, switchable (`AMBIENCE_ENABLED`, `AMBIENCE_VOLUME` in `lib/media.ts`).

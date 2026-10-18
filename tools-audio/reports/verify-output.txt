@@ -18,6 +18,7 @@ MORNING
   OK   ambience loop
   OK   wrong pick -> cue  ['/assets/audio/wrong/wrong-oh.mp3']
   OK   wrong pick -> spoken 'Try the other picture' (first miss)
+  OK   2nd wrong pick -> different cue + retry-pop sfx  ['/assets/audio/wrong/wrong-boop.mp3']
   OK   right pick -> preview voice
   OK   right pick -> twinkle + chime sfx
   OK   right pick -> success voice
@@ -27,6 +28,7 @@ PLAY TIME
   OK   ambience loop
   OK   wrong pick -> cue  ['/assets/audio/wrong/wrong-mine.mp3']
   OK   wrong pick -> spoken 'Try the other picture' (first miss)
+  OK   2nd wrong pick -> different cue + retry-pop sfx  ['/assets/audio/wrong/wrong-boop.mp3']
   OK   right pick -> preview voice
   OK   right pick -> twinkle + chime sfx
   OK   right pick -> success voice
@@ -36,6 +38,7 @@ MEAL TIME
   OK   ambience loop
   OK   wrong pick -> cue  ['/assets/audio/wrong/wrong-boop.mp3']
   OK   wrong pick -> spoken 'Try the other picture' (first miss)
+  OK   2nd wrong pick -> different cue + retry-pop sfx  ['/assets/audio/wrong/wrong-sigh.mp3']
   OK   right pick -> preview voice
   OK   right pick -> twinkle + chime sfx
   OK   right pick -> success voice
@@ -45,6 +48,7 @@ HELPING TIME
   OK   ambience loop
   OK   wrong pick -> cue  ['/assets/audio/wrong/wrong-sigh.mp3']
   OK   wrong pick -> spoken 'Try the other picture' (first miss)
+  OK   2nd wrong pick -> different cue + retry-pop sfx  ['/assets/audio/wrong/wrong-oh.mp3']
   OK   right pick -> preview voice
   OK   right pick -> twinkle + chime sfx
   OK   right pick -> success voice
@@ -54,6 +58,7 @@ BEDTIME
   OK   ambience loop
   OK   wrong pick -> cue  ['/assets/audio/wrong/wrong-oh.mp3']
   OK   wrong pick -> spoken 'Try the other picture' (first miss)
+  OK   2nd wrong pick -> different cue + retry-pop sfx  ['/assets/audio/wrong/wrong-sigh.mp3']
   OK   right pick -> preview voice
   OK   right pick -> twinkle + chime sfx
   OK   right pick -> success voice
@@ -87,6 +92,7 @@ FILES
   OK   /assets/audio/final/Success-Sleep-peacefully-little-hero.mp3  36405 bytes, 2.22s
   OK   /assets/audio/final/card-pop.mp3  3804 bytes, 0.17s
   OK   /assets/audio/final/celebrate.mp3  39331 bytes, 2.40s
+  OK   /assets/audio/final/retry-pop.mp3  10492 bytes, 0.60s
   OK   /assets/audio/final/success-chime.mp3  21776 bytes, 1.30s
   OK   /assets/audio/final/twinkle.mp3  17179 bytes, 1.00s
   OK   /assets/audio/final/ui-tap.mp3  2550 bytes, 0.09s
