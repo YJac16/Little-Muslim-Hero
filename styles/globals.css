@@ -264,3 +264,409 @@ body::after {
     transform: scale(1.05);
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* Animation upgrade (CSS-only, R0): flow between moments, soft feedback */
+/* ------------------------------------------------------------------ */
+
+/* Each moment glides in; the scene drifts slowly like a storybook page. */
+.level-enter {
+  animation: levelIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.scene-kenburns {
+  animation: kenBurns 14s ease-in-out infinite alternate;
+  transform-origin: 55% 60%;
+  will-change: transform;
+}
+.scene-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 65%
+  );
+  transform: translateX(-120%);
+  animation: sceneShine 1.4s ease-out 0.5s 1 forwards;
+}
+
+/* Choice cards pop in one after another, then breathe gently when it is their turn. */
+.choice-pop {
+  animation: choicePop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: var(--pop-delay, 0ms);
+}
+.choice-bob {
+  animation: choiceBob 2.6s ease-in-out infinite;
+  animation-delay: var(--bob-delay, 0ms);
+}
+.choice-correct {
+  animation: choiceWin 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.choice-soft-no {
+  animation: softNo 0.6s ease-in-out both;
+}
+
+.mascot-pop {
+  animation: mascotPop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.mascot-sway {
+  animation: mascotSway 3.8s ease-in-out infinite;
+  transform-origin: 50% 90%;
+}
+.caption-swap {
+  animation: captionSwap 0.35s ease-out both;
+}
+
+/* Hear-again button */
+.hear-again {
+  transition: transform 0.15s ease;
+}
+.hear-again:active {
+  transform: scale(0.92);
+}
+
+/* Star / crescent celebration */
+.burst-piece {
+  position: absolute;
+  opacity: 0;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.18));
+}
+.burst-burst .burst-piece {
+  left: var(--sx);
+  top: 92%;
+  animation: burstOut 2.4s cubic-bezier(0.17, 0.84, 0.32, 1) calc(var(--delay) + 450ms) both;
+}
+.burst-fall .burst-piece {
+  left: var(--left);
+  top: -8%;
+  animation: starFall var(--fall-dur) linear var(--fall-delay) infinite;
+}
+
+/* Start / end screen life */
+.title-bounce {
+  animation: titleBounce 3.2s ease-in-out infinite;
+}
+.twinkle {
+  position: absolute;
+  animation: twinkle 2.4s ease-in-out infinite;
+  animation-delay: var(--tw-delay, 0s);
+  color: #ffd36b;
+  pointer-events: none;
+}
+.check-pop {
+  animation: choicePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: var(--pop-delay, 0ms);
+}
+.mascot-celebrate {
+  animation: celebrateHop 1.6s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}
+.dot-fill {
+  animation: dotFill 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes levelIn {
+  from {
+    opacity: 0;
+    transform: translateX(28px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+@keyframes kenBurns {
+  from {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.09) translate3d(-1.2%, -1%, 0);
+  }
+}
+@keyframes sceneShine {
+  to {
+    transform: translateX(120%);
+  }
+}
+@keyframes choicePop {
+  0% {
+    opacity: 0;
+    transform: translateY(26px) scale(0.82);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes choiceBob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(-5px) rotate(0.4deg);
+  }
+}
+@keyframes choiceWin {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.09) rotate(-1.2deg);
+  }
+  70% {
+    transform: scale(1.03) rotate(0.8deg);
+  }
+  100% {
+    transform: scale(1.04) rotate(0);
+  }
+}
+/* A kind "not quite": a slow, small sway instead of a hard shake. */
+@keyframes softNo {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0);
+  }
+  25% {
+    transform: translateX(-6px) rotate(-1deg);
+  }
+  50% {
+    transform: translateX(6px) rotate(1deg);
+  }
+  75% {
+    transform: translateX(-3px) rotate(-0.5deg);
+  }
+}
+@keyframes mascotPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) rotate(-14deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+@keyframes mascotSway {
+  0%,
+  100% {
+    transform: rotate(-2.5deg) translateY(0);
+  }
+  50% {
+    transform: rotate(2.5deg) translateY(-8px);
+  }
+}
+@keyframes captionSwap {
+  from {
+    opacity: 0.25;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes burstOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0) rotate(0);
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)))
+      scale(1.1) rotate(var(--rot));
+  }
+}
+@keyframes starFall {
+  0% {
+    opacity: 0;
+    transform: translateY(0) rotate(0);
+  }
+  10% {
+    opacity: 0.95;
+  }
+  90% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(110vh) rotate(260deg);
+  }
+}
+@keyframes titleBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.6) rotate(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1) rotate(18deg);
+  }
+}
+@keyframes celebrateHop {
+  0%,
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+  15% {
+    transform: translateY(0) scale(1.04, 0.95);
+  }
+  45% {
+    transform: translateY(-18px) scale(0.98, 1.04);
+  }
+  70% {
+    transform: translateY(0) scale(1.03, 0.96);
+  }
+}
+@keyframes dotFill {
+  0% {
+    transform: scale(0.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Tall portrait phones: let the scene use the spare height instead of leaving a blank gap. */
+@media (orientation: portrait) and (min-height: 701px) {
+  .scene-box {
+    max-height: none !important;
+  }
+}
+
+/* Landscape (desktop, tablet, phone on its side): scene + caption on the left,
+   the two choices stacked on the right, so the scene is never squeezed away. */
+@media (orientation: landscape) and (min-width: 640px) {
+  .level-body {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .level-main {
+    flex: 1 1 0%;
+    min-width: 0;
+  }
+  .level-main .scene-box {
+    max-height: none !important;
+  }
+  .level-side {
+    flex: 0 0 auto;
+    width: min(38vw, 30rem, calc((100dvh - 8rem) * 0.76));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .level-side .choice-grid {
+    grid-template-columns: 1fr;
+    width: 100%;
+    gap: 0.6rem;
+  }
+  .level-side .choice-grid button {
+    max-height: calc((100dvh - 9rem) / 2) !important;
+  }
+}
+
+/* Scene reacts to a right pick: crossfade to the chosen picture. */
+.scene-reveal {
+  animation: sceneReveal 0.45s ease-out both;
+}
+@keyframes sceneReveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Gentle "look here" pulse for a stuck child. */
+.choice-hint {
+  animation: choiceHint 1.4s ease-in-out 3;
+}
+@keyframes choiceHint {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 211, 107, 0);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 0 10px rgba(255, 211, 107, 0.55);
+  }
+}
+
+/* Portrait phones: bigger, squarer picture cards (art centre stays visible). */
+@media (max-width: 640px) and (orientation: portrait) {
+  .choice-card {
+    aspect-ratio: 1 / 1;
+    max-height: none !important;
+  }
+  .choice-img {
+    object-fit: cover !important;
+  }
+}
+
+/* Backdrop only matters when the scene is letterboxed (landscape). */
+.scene-backdrop {
+  display: none;
+}
+@media (orientation: landscape) and (min-width: 640px) {
+  .scene-backdrop {
+    display: block;
+    opacity: 0.9;
+  }
+  .scene-fg {
+    object-fit: contain !important;
+  }
+}
+@media (max-width: 640px) and (orientation: portrait) {
+  .choice-img {
+    object-position: var(--focus, 50% 50%) !important;
+  }
+}
+
+/* Scene frame: fills the box on portrait; in landscape it is exactly the art's
+   shape (2256x1648) centred on the blurred backdrop, so overlays sit on the art. */
+.scene-frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+@media (orientation: landscape) and (min-width: 640px) {
+  .scene-box {
+    container-type: size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .scene-frame {
+    position: relative;
+    inset: auto;
+    flex: none;
+    width: min(100cqw, calc(100cqh * 1.3689));
+    aspect-ratio: 2256 / 1648;
+    border-radius: 18px;
+    box-shadow: 0 6px 24px rgba(33, 65, 43, 0.18);
+  }
+  .scene-backdrop {
+    position: absolute;
+  }
+  .scene-fg {
+    object-fit: cover !important;
+  }
+}

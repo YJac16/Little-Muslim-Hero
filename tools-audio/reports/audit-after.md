@@ -1,0 +1,36 @@
+| file | dur s | LUFS | peak dBFS | clip | end dBFS | lead/tail s | F0 Hz | centroid Hz | flags |
+|---|---|---|---|---|---|---|---|---|---|
+| assets/audio/final/Bedtime-Intro-Before-we-sleep-we-make-our-dua.mp3 | 3.66 | -20.5 | -2.4 | 0 | -115 | 0.05/0.36 | 182 | 3318 | ok |
+| assets/audio/final/End-MashaAllah-you-did-it-little-hero.mp3 | 2.75 | -20.4 | -2.4 | 0 | -180 | 0.00/0.15 | 208 | 2228 | ok |
+| assets/audio/final/Helping-Intro-Mommy-needs-help-What-can-we-do.mp3 | 2.93 | -20.4 | -4.7 | 0 | -136 | 0.00/0.33 | 274 | 3038 | ok |
+| assets/audio/final/Intro-Assalamu-alaikum-little-hero.mp3 | 3.48 | -20.5 | -2.4 | 0 | -180 | 0.00/0.18 | 204 | 2236 | ok |
+| assets/audio/final/Meal-Intro-Before-we-eat-what-do-we-say.mp3 | 2.40 | -20.4 | -3.9 | 0 | -119 | 0.05/0.35 | 315 | 4195 | ok |
+| assets/audio/final/Morning-Intro-Good-morning-little-hero-When-we-wake-up-what-do-we-say.mp3 | 4.62 | -20.4 | -2.9 | 0 | -100 | 0.05/0.37 | 225 | 2249 | ok |
+| assets/audio/final/Play-Intro-Your-friend-wants-to-play-What-should-we-do.mp3 | 3.19 | -20.5 | -2.4 | 0 | -92 | 0.10/0.29 | 290 | 3143 | ok |
+| assets/audio/final/Preview-Alhamdulilah.mp3 | 1.25 | -20.5 | -6.3 | 0 | -144 | 0.20/0.25 | 101 | 1542 | ok |
+| assets/audio/final/Preview-Bismillah.mp3 | 1.10 | -20.4 | -7.1 | 0 | -105 | 0.20/0.05 | 132 | 2653 | ok |
+| assets/audio/final/Preview-Help.mp3 | 1.12 | -20.4 | -4.6 | 0 | -180 | 0.00/0.17 | 223 | 2121 | ok |
+| assets/audio/final/Preview-Share.mp3 | 0.78 | -20.4 | -6.0 | 0 | -116 | 0.00/0.28 | 118 | 1818 | ok |
+| assets/audio/final/Retry-Try-the-other-picture.mp3 | 1.48 | -20.4 | -3.6 | 0 | -180 | 0.00/0.18 | 222 | 2041 | ok |
+| assets/audio/final/Success-Bismillah-brings-barakah.mp3 | 1.91 | -20.4 | -4.2 | 0 | -178 | 0.20/0.31 | 233 | 3067 | ok |
+| assets/audio/final/Success-Helping-is-from-good-character.mp3 | 2.95 | -20.4 | -4.2 | 0 | -105 | 0.05/0.35 | 190 | 3413 | ok |
+| assets/audio/final/Success-MashaAllah-Allah-loves-when-we-remember-Him.mp3 | 3.58 | -20.4 | -6.3 | 0 | -129 | 0.20/0.28 | 178 | 3113 | ok |
+| assets/audio/final/Success-Sharing-makes-hearts-happy.mp3 | 1.99 | -20.4 | -2.9 | 0 | -102 | 0.00/0.24 | 220 | 3224 | ok |
+| assets/audio/final/Success-Sleep-peacefully-little-hero.mp3 | 2.22 | -20.4 | -5.5 | 0 | -124 | 0.00/0.02 | 183 | 4480 | ok |
+| assets/audio/final/card-pop.mp3 | 0.17 | nan | -14.5 | 0 | -78 | 0.00/0.02 | - | 682 | ok |
+| assets/audio/final/celebrate.mp3 | 2.40 | -26.4 | -13.2 | 0 | -117 | 0.00/0.10 | - | 1124 | ok |
+| assets/audio/final/retry-pop.mp3 | 0.60 | -27.8 | -14.5 | 0 | -112 | 0.00/0.05 | - | 626 | ok |
+| assets/audio/final/success-chime.mp3 | 1.30 | -26.4 | -11.2 | 0 | -123 | 0.00/0.15 | - | 957 | ok |
+| assets/audio/final/twinkle.mp3 | 1.00 | -26.4 | -13.6 | 0 | -113 | 0.00/0.05 | - | 1518 | ok |
+| assets/audio/final/ui-tap.mp3 | 0.09 | nan | -15.0 | 0 | -96 | 0.00/0.04 | - | 552 | ok |
+| assets/audio/final/ui-whoosh.mp3 | 0.50 | -26.5 | -13.1 | 0 | -107 | 0.00/0.00 | - | 1225 | ok |
+| assets/audio/wrong/wrong-boop.mp3 | 0.60 | -20.4 | -8.3 | 0 | -69 | 0.00/0.05 | - | 556 | ok |
+| assets/audio/wrong/wrong-mine.mp3 | 0.33 | nan | -4.4 | 0 | -54 | 0.00/0.03 | - | 1949 | ok |
+| assets/audio/wrong/wrong-oh.mp3 | 0.68 | -20.4 | -9.5 | 0 | -70 | 0.00/0.03 | - | 814 | ok |
+| assets/audio/wrong/wrong-sigh.mp3 | 0.82 | -21.5 | -9.9 | 0 | -70 | 0.00/0.02 | - | 546 | ok |
+| assets/audio/ambience/bedtime.mp3 | 16.00 | -30.4 | -19.8 | 0 | -28 | 0.00/0.00 | - | 925 | ok |
+| assets/audio/ambience/helping.mp3 | 16.00 | -30.4 | -14.5 | 0 | -36 | 0.00/0.00 | - | 516 | ok |
+| assets/audio/ambience/meal.mp3 | 16.00 | -30.4 | -14.9 | 0 | -31 | 0.00/0.00 | - | 487 | ok |
+| assets/audio/ambience/morning.mp3 | 16.00 | -30.4 | -10.3 | 0 | -33 | 0.00/0.00 | - | 2337 | ok |
+| assets/audio/ambience/play.mp3 | 16.00 | -30.4 | -14.3 | 0 | -28 | 0.00/0.00 | - | 1379 | ok |
+| assets/audio/nasheed-bg.mp3 | 96.00 | -22.1 | -6.3 | 0 | -79 | 0.05/0.10 | - | 958 | ok |

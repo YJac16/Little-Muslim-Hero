@@ -2,34 +2,68 @@
  * Paths = files in `public/` (URL starts with `/`).
  * Filenames match what you added at repo root / `public/assets/`.
  */
+/**
+ * WRONG-ANSWER CUE SET (swappable): every file in public/assets/audio/wrong/.
+ * Replace a file (keep it < 1 s, gentle, ~-21 LUFS) or add one and list it here.
+ * Which cue plays for each moment is set in lib/levels.ts (`wrongCues`).
+ */
+export const WRONG = {
+  mine: "/assets/audio/wrong/wrong-mine.mp3", // the narrator's "Mine." (fits Play Time best)
+  oh: "/assets/audio/wrong/wrong-oh.mp3",
+  boop: "/assets/audio/wrong/wrong-boop.mp3",
+  sigh: "/assets/audio/wrong/wrong-sigh.mp3",
+} as const;
+
+/**
+ * PER-MOMENT AMBIENCE (very quiet synthesized loops, CC0): one file per moment in
+ * public/assets/audio/ambience/. Set AMBIENCE_ENABLED = false to switch it off everywhere,
+ * lower AMBIENCE_VOLUME to make it quieter (0..1, relative to the file; the file itself is
+ * about 10 dB under the nasheed, and it ducks under every voice line like the nasheed does).
+ */
+export const AMBIENCE_ENABLED = true;
+export const AMBIENCE_VOLUME = 0.35;
+export const AMBIENCE = {
+  morning: "/assets/audio/ambience/morning.mp3",
+  play: "/assets/audio/ambience/play.mp3",
+  meal: "/assets/audio/ambience/meal.mp3",
+  helping: "/assets/audio/ambience/helping.mp3",
+  bedtime: "/assets/audio/ambience/bedtime.mp3",
+} as const;
+
 export const AUDIO = {
   /** Compressed ~96s mono loop (was 50min / 47MB). */
   nasheedBackground: "/assets/audio/nasheed-bg.mp3",
   /** Soft whoosh on Start / Play Again */
-  uiStart: "/assets/audio/sfx/ui-whoosh.mp3",
-  uiTap: "/assets/audio/sfx/ui-tap.mp3",
-  celebrate: "/assets/audio/sfx/celebrate.mp3",
+  uiStart: "/assets/audio/final/ui-whoosh.mp3",
+  uiTap: "/assets/audio/final/ui-tap.mp3",
+  celebrate: "/assets/audio/final/celebrate.mp3",
   narrationMorning:
-    "/Morning-Intro-Good-morning-little-hero-When-we-wake-up-what-do-we-say.mp3",
+    "/assets/audio/final/Morning-Intro-Good-morning-little-hero-When-we-wake-up-what-do-we-say.mp3",
   narrationPlay:
-    "/Play-Intro-Your-friend-wants-to-play-What-should-we-do.mp3",
-  narrationMeal: "/Meal-Intro-Before-we-eat-what-do-we-say.mp3",
+    "/assets/audio/final/Play-Intro-Your-friend-wants-to-play-What-should-we-do.mp3",
+  narrationMeal: "/assets/audio/final/Meal-Intro-Before-we-eat-what-do-we-say.mp3",
   narrationHelping:
-    "/Helping-Intro-Mommy-needs-help-What-can-we-do.mp3",
-  narrationBed: "/Bedtime-Intro-Before-we-sleep-we-make-our-dua.mp3",
-  previewAlhamdulilah: "/Preview-Alhamdulilah.mp3",
-  previewBismillah: "/Preview-Bismillah.mp3",
-  previewMine: "/Preview-Mine.mp3",
-  previewShare: "/Preview-Share.mp3",
-  successChime: "/assets/audio/sfx/success-chime.mp3",
-  retry: "/assets/audio/sfx/retry-pop.mp3",
+    "/assets/audio/final/Helping-Intro-Mommy-needs-help-What-can-we-do.mp3",
+  narrationBed: "/assets/audio/final/Bedtime-Intro-Before-we-sleep-we-make-our-dua.mp3",
+  previewAlhamdulilah: "/assets/audio/final/Preview-Alhamdulilah.mp3",
+  previewBismillah: "/assets/audio/final/Preview-Bismillah.mp3",
+  previewShare: "/assets/audio/final/Preview-Share.mp3",
+  previewHelp: "/assets/audio/final/Preview-Help.mp3",
+  /** PRIVATE-TEST placeholder voices (Kokoro). Replace before publishing. */
+  introGreeting: "/assets/audio/final/Intro-Assalamu-alaikum-little-hero.mp3",
+  retryVoice: "/assets/audio/final/Retry-Try-the-other-picture.mp3",
+  endVoice: "/assets/audio/final/End-MashaAllah-you-did-it-little-hero.mp3",
+  cardPop: "/assets/audio/final/card-pop.mp3",
+  twinkle: "/assets/audio/final/twinkle.mp3",
+  successChime: "/assets/audio/final/success-chime.mp3",
+  retry: "/assets/audio/final/retry-pop.mp3",
   successNarrationMorning:
-    "/Success-MashaAllah-Allah-loves-when-we-remember-Him.mp3",
-  successNarrationPlay: "/Success-Sharing-makes-hearts-happy.mp3",
-  successNarrationMeal: "/Success-Bismillah-brings-barakah.mp3",
+    "/assets/audio/final/Success-MashaAllah-Allah-loves-when-we-remember-Him.mp3",
+  successNarrationPlay: "/assets/audio/final/Success-Sharing-makes-hearts-happy.mp3",
+  successNarrationMeal: "/assets/audio/final/Success-Bismillah-brings-barakah.mp3",
   successNarrationHelping:
-    "/Success-Helping-is-from-good-character.mp3",
-  successNarrationBedtime: "/Success-Sleep-peacefully-little-hero.mp3",
+    "/assets/audio/final/Success-Helping-is-from-good-character.mp3",
+  successNarrationBedtime: "/assets/audio/final/Success-Sleep-peacefully-little-hero.mp3",
 } as const;
 
 export const IMG = {

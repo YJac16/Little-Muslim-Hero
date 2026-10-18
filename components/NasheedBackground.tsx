@@ -72,9 +72,21 @@ export function NasheedBackground({
       return;
     }
 
+    let cleanup: (() => void) | undefined;
     void el.play().catch(() => {
-      /* autoplay blocked until gesture; retry happens on next effect/deps */
+      // Autoplay blocked (e.g. page refreshed mid-game): start on first touch.
+      const resume = () => {
+        void el.play().catch(() => undefined);
+        cleanup?.();
+      };
+      window.addEventListener("pointerdown", resume, { once: true });
+      window.addEventListener("keydown", resume, { once: true });
+      cleanup = () => {
+        window.removeEventListener("pointerdown", resume);
+        window.removeEventListener("keydown", resume);
+      };
     });
+    return () => cleanup?.();
   }, [soundEnabled, active]);
 
   return (

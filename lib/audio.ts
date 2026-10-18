@@ -1,4 +1,6 @@
 const cache = new Map<string, HTMLAudioElement>();
+/** Resolvers for in-flight playUrl() calls so stop*() can release awaiting code. */
+const pending = new Map<string, Set<() => void>>();
 
 /** Quiet ambient bed; ducked further under narration / SFX. */
 export const BG_VOLUME_IDLE = 0.26;
@@ -80,15 +82,39 @@ export function playUrl(
       window.clearTimeout(safety);
       audio?.removeEventListener("ended", onEnd);
       audio?.removeEventListener("error", onEnd);
+      cleanupPending();
       unduck();
       resolve();
     };
     const onEnd = () => done();
     const safety = window.setTimeout(done, 12_000);
+    let set = pending.get(src);
+    if (!set) {
+      set = new Set();
+      pending.set(src, set);
+    }
+    set.add(done);
+    const cleanupPending = () => pending.get(src)?.delete(done);
     audio.addEventListener("ended", onEnd, { once: true });
     audio.addEventListener("error", onEnd, { once: true });
     void audio.play().catch(() => done());
   });
+}
+
+/** Create + load clips ahead of time (no playback) so the first tap has no lag. */
+export function preloadUrls(srcs: readonly string[]) {
+  if (typeof window === "undefined") return;
+  for (const src of srcs) {
+    if (cache.has(src)) continue;
+    const audio = new Audio(src);
+    audio.preload = "auto";
+    cache.set(src, audio);
+    try {
+      audio.load();
+    } catch {
+      /* ignore */
+    }
+  }
 }
 
 export function stopUrl(src: string) {
@@ -101,4 +127,54 @@ export function stopUrl(src: string) {
       /* ignore */
     }
   }
+  const set = pending.get(src);
+  if (set) {
+    for (const release of [...set]) release();
+  }
+}
+
+/** Stop every cached clip (used when sound is switched off mid-level). */
+export function stopAll() {
+  for (const src of [...cache.keys()]) stopUrl(src);
+}
+
+/**
+ * Looping per-moment ambience bed. Fades in, follows the nasheed's ducking (so it sits back
+ * under every voice line), fades out and pauses on stop. Returns the stop function.
+ */
+export function startAmbience(src: string, baseVolume: number): () => void {
+  if (typeof window === "undefined") return () => undefined;
+  const el = new Audio(src);
+  el.loop = true;
+  el.preload = "auto";
+  el.volume = 0;
+  let stopped = false;
+  let raf = 0;
+  const fadeTo = (target: number, ms: number, then?: () => void) => {
+    cancelAnimationFrame(raf);
+    const from = el.volume;
+    const t0 = performance.now();
+    const step = (now: number) => {
+      const t = Math.min(1, (now - t0) / ms);
+      try {
+        el.volume = Math.max(0, Math.min(1, from + (target - from) * t));
+      } catch {
+        return;
+      }
+      if (t < 1) raf = requestAnimationFrame(step);
+      else then?.();
+    };
+    raf = requestAnimationFrame(step);
+  };
+  const unsubscribe = subscribeBackgroundVolume((bg) => {
+    if (stopped) return;
+    fadeTo(baseVolume * (bg / BG_VOLUME_IDLE), 350);
+  });
+  void el.play().catch(() => undefined);
+  return () => {
+    if (stopped) return;
+    stopped = true;
+    unsubscribe();
+    fadeTo(0, 500, () => el.pause());
+  };
 }

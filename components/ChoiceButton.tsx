@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useState, type CSSProperties } from "react";
 
 export type ChoiceButtonProps = {
   image: string;
@@ -11,6 +11,13 @@ export type ChoiceButtonProps = {
   waiting: boolean;
   isHighlighted: boolean;
   shouldShake: boolean;
+  /** Stagger index for the entrance pop. */
+  order?: number;
+  /** Gentle idle bob while it is the child's turn. */
+  bob?: boolean;
+  /** Pulse to help a stuck child. */
+  hint?: boolean;
+  focus?: string;
   onResolved: (correct: boolean) => void;
 };
 
@@ -40,6 +47,10 @@ export function ChoiceButton({
   waiting,
   isHighlighted,
   shouldShake,
+  order = 0,
+  bob = false,
+  hint = false,
+  focus,
   onResolved,
 }: ChoiceButtonProps) {
   const [isActing, setIsActing] = useState(false);
@@ -54,27 +65,38 @@ export function ChoiceButton({
   const locked = disabled || waiting || isActing;
 
   return (
+    <div
+      className="choice-pop"
+      style={{ "--pop-delay": `300ms` } as CSSProperties}
+    >
     <button
       type="button"
       onClick={handleTap}
       disabled={locked}
       aria-label={label}
       aria-disabled={locked}
+      style={
+        {
+          "--bob-delay": `${order * 650}ms`,
+          "--focus": focus ?? "50% 50%",
+        } as CSSProperties
+      }
       className={[
         /* Match landscape choice art (~4:3). Avoid h-full stretch → tall
            portrait frames that object-cover then side-crops. */
-        "group relative aspect-[4/3] w-full max-h-[min(42vh,20rem)] select-none overflow-hidden rounded-[28px] border-[3px] border-white bg-[#fff8e7] shadow-softBlue transition-all duration-200 touch-manipulation",
+        "choice-card group relative aspect-[4/3] w-full max-h-[min(42vh,20rem)] select-none overflow-hidden rounded-[28px] border-[3px] border-white bg-[#fff8e7] shadow-softBlue outline outline-1 -outline-offset-4 outline-[#21412b]/15 transition-all duration-200 touch-manipulation",
         "sm:max-h-[min(46vh,24rem)]",
         "active:scale-[0.97]",
         isHighlighted
-          ? "scale-[1.02] border-[#ffd36b] ring-4 ring-[#ffd36b]/80 ring-offset-2 ring-offset-cream shadow-glow"
+          ? "choice-correct border-[#ffd36b] ring-4 ring-[#ffd36b]/80 ring-offset-2 ring-offset-cream shadow-glow"
           : "",
-        shouldShake ? "animate-bounceRetry" : "",
+        shouldShake ? "choice-soft-no border-[#ef8b48]/70 saturate-50" : "",
+        hint && !locked ? "choice-hint" : bob && !locked ? "choice-bob" : "",
         waiting
           ? "cursor-wait"
           : locked
             ? "opacity-75"
-            : "hover:-translate-y-1 hover:shadow-glow",
+            : "hover:shadow-glow",
       ]
         .filter(Boolean)
         .join(" ")}
@@ -84,7 +106,7 @@ export function ChoiceButton({
         alt=""
         fill
         className={[
-          "object-contain object-center transition-transform duration-200 group-active:scale-[0.98]",
+          "choice-img object-contain object-center transition-transform duration-200 group-active:scale-[0.98]",
           waiting ? "brightness-90" : "",
         ]
           .filter(Boolean)
@@ -107,5 +129,6 @@ export function ChoiceButton({
         </div>
       )}
     </button>
+    </div>
   );
 }

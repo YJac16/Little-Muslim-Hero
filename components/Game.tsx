@@ -6,8 +6,10 @@ import {
   useEffect,
   useRef,
   useState,
+  type CSSProperties,
   type ReactNode,
 } from "react";
+import { Burst } from "@/components/Burst";
 import { Level } from "@/components/Level";
 import { NasheedBackground } from "@/components/NasheedBackground";
 import { ParentMenu } from "@/components/ParentMenu";
@@ -158,6 +160,42 @@ function AmbientBackdrop() {
   );
 }
 
+function Twinkles() {
+  const spots = [
+    { l: "2%", t: "18%", s: 22, d: "0s" },
+    { l: "88%", t: "10%", s: 28, d: "0.6s" },
+    { l: "94%", t: "58%", s: 18, d: "1.1s" },
+    { l: "-2%", t: "62%", s: 26, d: "1.7s" },
+    { l: "48%", t: "-4%", s: 20, d: "0.3s" },
+  ];
+  return (
+    <>
+      {spots.map((p, i) => (
+        <svg
+          key={i}
+          viewBox="0 0 24 24"
+          className="twinkle"
+          style={
+            {
+              left: p.l,
+              top: p.t,
+              width: p.s,
+              height: p.s,
+              "--tw-delay": p.d,
+            } as CSSProperties
+          }
+          aria-hidden
+        >
+          <path
+            d="M12 1.5l2.4 7.2 7.2 2.4-7.2 2.4L12 20.7l-2.4-7.2-7.2-2.4 7.2-2.4L12 1.5z"
+            fill="currentColor"
+          />
+        </svg>
+      ))}
+    </>
+  );
+}
+
 function SoundIcon({ on }: { on: boolean }) {
   return on ? (
     <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden fill="currentColor">
@@ -176,6 +214,16 @@ export function Game() {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [parentOpen, setParentOpen] = useState(false);
   const [ready, setReady] = useState(false);
+  /** True right after Start / Play Again so the greeting plays once. */
+  const [freshStart, setFreshStart] = useState(false);
+  /** Which side the right answer sits on, per moment. Alternates; start side is random. */
+  const [flips, setFlips] = useState<boolean[]>(() =>
+    levels.map((_, i) => i % 2 === 1),
+  );
+  const reshuffle = useCallback(() => {
+    const start = Math.random() < 0.5;
+    setFlips(levels.map((_, i) => (i % 2 === 0 ? start : !start)));
+  }, []);
   const startingRef = useRef(false);
   const celebratedRef = useRef(false);
 
@@ -207,7 +255,10 @@ export function Game() {
   useEffect(() => {
     if (screen !== "end" || celebratedRef.current) return;
     celebratedRef.current = true;
-    void playUrl(AUDIO.celebrate, soundEnabled, 0.9);
+    void (async () => {
+      await playUrl(AUDIO.celebrate, soundEnabled, 0.9);
+      await playUrl(AUDIO.endVoice, soundEnabled, 1);
+    })();
   }, [screen, soundEnabled]);
 
   const persistSound = useCallback((next: boolean) => {
@@ -226,20 +277,24 @@ export function Game() {
     if (startingRef.current) return;
     startingRef.current = true;
     void playUrl(AUDIO.uiStart, soundEnabled, 0.85);
+    setFreshStart(true);
+    reshuffle();
     setLevelIndex(0);
     setScreen("play");
     startingRef.current = false;
-  }, [soundEnabled]);
+  }, [soundEnabled, reshuffle]);
 
   const playAgain = useCallback(() => {
     if (startingRef.current) return;
     startingRef.current = true;
     void playUrl(AUDIO.uiStart, soundEnabled, 0.85);
     celebratedRef.current = false;
+    setFreshStart(true);
+    reshuffle();
     setLevelIndex(0);
     setScreen("play");
     startingRef.current = false;
-  }, [soundEnabled]);
+  }, [soundEnabled, reshuffle]);
 
   const onLevelComplete = useCallback(() => {
     setLevelIndex((current) => {
@@ -253,6 +308,7 @@ export function Game() {
 
   const jumpToSection = useCallback((index: number) => {
     const i = Math.max(0, Math.min(levels.length - 1, index));
+    setFreshStart(false);
     setLevelIndex(i);
     setScreen("play");
     setParentOpen(false);
@@ -301,7 +357,7 @@ export function Game() {
               src={IMG.morningScene}
               alt=""
               fill
-              className="object-cover object-center opacity-50"
+              className="object-cover object-center opacity-35 blur-[3px]"
               priority
               sizes="100vw"
             />
@@ -327,9 +383,10 @@ export function Game() {
             <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center gap-4 short:gap-2 sm:gap-5">
               <div className="hero-enter flex w-full flex-col items-center text-center">
                 <LogoMultiTap onUnlock={openParent} className="mb-1">
-                  <div className="relative mx-auto h-[min(58vw,20rem)] w-[min(58vw,20rem)] animate-floatGentle short:h-36 short:w-36 sm:h-72 sm:w-72 md:h-80 md:w-80">
+                  <div className="relative mx-auto h-[min(58vw,20rem)] w-[min(58vw,20rem)] animate-floatGentle short:h-36 short:w-36 sm:h-[min(18rem,27vh)] sm:w-[min(18rem,27vh)] md:h-[min(20rem,27vh)] md:w-[min(20rem,27vh)]">
                     <div className="absolute inset-3 rounded-full bg-[#ffd36b]/45 blur-2xl" />
-                    <div className="absolute inset-[8%] overflow-hidden rounded-full bg-white/50 shadow-glow ring-4 ring-white/70">
+                    <Twinkles />
+                    <div className="mascot-sway absolute inset-[8%] overflow-hidden rounded-full bg-white/50 shadow-glow ring-4 ring-white/70">
                       <Image
                         src={IMG.mascot}
                         alt="Little Muslim Hero mascot"
@@ -342,10 +399,10 @@ export function Game() {
                   </div>
                 </LogoMultiTap>
 
-                <h1 className="storybook-text mt-3 font-heading text-[clamp(2.6rem,7.5vw,4.75rem)] leading-[0.92] text-[#25513d] short:mt-1 short:text-3xl">
+                <h1 className="title-bounce storybook-text mt-3 font-heading text-[clamp(2.6rem,7.5vw,4.75rem)] leading-[0.92] text-[#25513d] short:mt-1 short:text-3xl">
                   Little Muslim Hero
                 </h1>
-                <p className="mt-1 font-heading text-[clamp(1.25rem,3.5vw,2.25rem)] text-[#ef8b48] short:text-lg">
+                <p className="mt-1 font-heading text-[clamp(1.25rem,3.5vw,2.25rem)] text-[#b8500a] short:text-lg">
                   My Barakah Day
                 </p>
                 <p className="storybook-text mx-auto mt-2 max-w-lg text-base font-semibold leading-6 text-[#3a5f47] short:hidden sm:text-lg">
@@ -357,7 +414,7 @@ export function Game() {
                 <button
                   type="button"
                   onClick={startGame}
-                  className="cta-glow relative z-20 w-full rounded-[28px] border border-white/50 bg-gradient-to-r from-primary to-[#5bcf72] px-6 py-5 text-2xl font-bold text-white shadow-soft transition-transform active:scale-[0.99] min-h-[96px] short:min-h-[84px] sm:min-h-[108px] touch-manipulation"
+                  className="cta-glow relative z-20 w-full rounded-[28px] border border-white/50 bg-gradient-to-r from-[#2e8b4a] to-[#35995a] px-6 py-5 text-2xl font-bold text-white shadow-soft transition-transform active:scale-[0.99] min-h-[96px] short:min-h-[84px] sm:min-h-[108px] touch-manipulation"
                 >
                   Start the Day
                 </button>
@@ -403,7 +460,7 @@ export function Game() {
                       active
                         ? "h-3.5 w-8 bg-[#ef8b48] sm:h-4 sm:w-9"
                         : "h-3.5 w-3.5 sm:h-4 sm:w-4",
-                      complete && !active ? "bg-primary" : "",
+                      complete && !active ? "dot-fill bg-primary" : "",
                       !complete && !active ? "bg-primary/25" : "",
                     ]
                       .filter(Boolean)
@@ -437,6 +494,10 @@ export function Game() {
             soundEnabled={soundEnabled}
             levelIndex={levelIndex}
             totalLevels={levels.length}
+            flip={flips[levelIndex]}
+            introVoice={
+              freshStart && levelIndex === 0 ? AUDIO.introGreeting : undefined
+            }
             onComplete={onLevelComplete}
           />
         </div>
@@ -449,13 +510,14 @@ export function Game() {
               src={IMG.mascotRewardScene}
               alt=""
               fill
-              className="object-cover object-center opacity-70"
+              className="object-cover object-center opacity-55"
               sizes="100vw"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#fff8e7]/25 via-[#fff8e7]/75 to-[#fff8e7]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#fff8e7]/55 via-[#fff8e7]/80 to-[#fff8e7]" />
           </div>
 
+          <Burst mode="fall" count={16} />
           <div className="relative mx-auto flex h-full w-full max-w-3xl flex-col items-center justify-center px-5 text-center safe-pb pt-[max(1rem,env(safe-area-inset-top))] sm:px-8">
             <div className="absolute left-3 top-[max(0.5rem,env(safe-area-inset-top))] z-10 sm:left-5">
               <LogoMultiTap onUnlock={openParent}>
@@ -473,7 +535,7 @@ export function Game() {
 
             <div className="hero-enter relative w-full px-2">
               <LogoMultiTap onUnlock={openParent}>
-                <div className="relative mx-auto mb-3 h-52 w-52 animate-scaleSuccess short:mb-2 short:h-36 short:w-36 sm:mb-5 sm:h-64 sm:w-64 md:h-72 md:w-72">
+                <div className="mascot-celebrate relative mx-auto mb-3 h-52 w-52 short:mb-2 short:h-36 short:w-36 sm:mb-5 sm:h-64 sm:w-64 md:h-72 md:w-72">
                   <div className="absolute inset-4 rounded-full bg-[#ffd36b]/35 blur-2xl" />
                   <div className="absolute inset-[6%] overflow-hidden rounded-full bg-white/40 ring-4 ring-white/70">
                     <Image
@@ -495,10 +557,11 @@ export function Game() {
               </p>
 
               <div className="mx-auto mt-5 flex max-w-md items-center justify-center gap-2 short:mt-3 sm:mt-6 sm:gap-3">
-                {levels.map((level) => (
+                {levels.map((level, i) => (
                   <div
                     key={level.id}
-                    className="flex flex-col items-center gap-1.5"
+                    className="check-pop flex flex-col items-center gap-1.5"
+                    style={{ "--pop-delay": `${500 + i * 160}ms` } as CSSProperties}
                   >
                     <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-base font-bold text-white shadow-soft sm:h-12 sm:w-12 sm:text-lg">
                       ✓
@@ -514,7 +577,7 @@ export function Game() {
             <button
               type="button"
               onClick={playAgain}
-              className="cta-glow relative z-20 hero-enter-delay mt-6 w-full max-w-lg rounded-[28px] border border-white/50 bg-gradient-to-r from-[#5cbff5] to-[#7ad2ff] px-6 py-5 text-xl font-bold text-white shadow-softBlue transition-transform active:scale-[0.99] min-h-[96px] short:mt-4 short:min-h-[84px] sm:mt-8 sm:min-h-[108px] touch-manipulation"
+              className="cta-glow relative z-20 hero-enter-delay mt-6 w-full max-w-lg rounded-[28px] border border-white/50 bg-gradient-to-r from-[#2b7fc2] to-[#3b92d0] px-6 py-5 text-xl font-bold text-white shadow-softBlue transition-transform active:scale-[0.99] min-h-[96px] short:mt-4 short:min-h-[84px] sm:mt-8 sm:min-h-[108px] touch-manipulation"
             >
               Play Again
             </button>

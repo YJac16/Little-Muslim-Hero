@@ -1,0 +1,106 @@
+OK   /assets/audio/wrong/wrong-boop.mp3 http 200 10492 bytes decoded duration 0.60s
+OK   /assets/audio/wrong/wrong-mine.mp3 http 200 6312 bytes decoded duration 0.33s
+OK   /assets/audio/wrong/wrong-oh.mp3 http 200 12163 bytes decoded duration 0.68s
+OK   /assets/audio/wrong/wrong-sigh.mp3 http 200 14253 bytes decoded duration 0.82s
+COVERED  Morning | Hiding under the blanket | [['/assets/audio/wrong/wrong-oh.mp3'], ['/assets/audio/wrong/wrong-boop.mp3'], ['/assets/audio/wrong/wrong-sigh.mp3'], ['/assets/audio/wrong/wrong-oh.mp3']]
+COVERED  Play Time | Keeping the toys | [['/assets/audio/wrong/wrong-mine.mp3'], ['/assets/audio/wrong/wrong-boop.mp3'], ['/assets/audio/wrong/wrong-oh.mp3'], ['/assets/audio/wrong/wrong-sigh.mp3']]
+COVERED  Meal Time | Reaching for food quickly | [['/assets/audio/wrong/wrong-boop.mp3'], ['/assets/audio/wrong/wrong-sigh.mp3'], ['/assets/audio/wrong/wrong-oh.mp3'], ['/assets/audio/wrong/wrong-boop.mp3']]
+COVERED  Helping Time | Playing alone nearby | [['/assets/audio/wrong/wrong-sigh.mp3'], ['/assets/audio/wrong/wrong-oh.mp3'], ['/assets/audio/wrong/wrong-boop.mp3'], ['/assets/audio/wrong/wrong-sigh.mp3']]
+COVERED  Bedtime | Jumping on the bed | [['/assets/audio/wrong/wrong-oh.mp3'], ['/assets/audio/wrong/wrong-sigh.mp3'], ['/assets/audio/wrong/wrong-boop.mp3'], ['/assets/audio/wrong/wrong-oh.mp3']]
+PAGE ERRORS: []
+RESULT: PASS
+START SCREEN -> game
+  OK   start whoosh sfx
+MORNING
+  OK   start greeting voice
+  OK   question voice
+  OK   'ready' pop sfx
+  OK   ambience loop
+  OK   wrong pick -> cue  ['/assets/audio/wrong/wrong-oh.mp3']
+  OK   wrong pick -> spoken 'Try the other picture' (first miss)
+  OK   2nd wrong pick -> different cue + retry-pop sfx  ['/assets/audio/wrong/wrong-boop.mp3']
+  OK   right pick -> preview voice
+  OK   right pick -> twinkle + chime sfx
+  OK   right pick -> success voice
+PLAY TIME
+  OK   question voice
+  OK   'ready' pop sfx
+  OK   ambience loop
+  OK   wrong pick -> cue  ['/assets/audio/wrong/wrong-mine.mp3']
+  OK   wrong pick -> spoken 'Try the other picture' (first miss)
+  OK   2nd wrong pick -> different cue + retry-pop sfx  ['/assets/audio/wrong/wrong-boop.mp3']
+  OK   right pick -> preview voice
+  OK   right pick -> twinkle + chime sfx
+  OK   right pick -> success voice
+MEAL TIME
+  OK   question voice
+  OK   'ready' pop sfx
+  OK   ambience loop
+  OK   wrong pick -> cue  ['/assets/audio/wrong/wrong-boop.mp3']
+  OK   wrong pick -> spoken 'Try the other picture' (first miss)
+  OK   2nd wrong pick -> different cue + retry-pop sfx  ['/assets/audio/wrong/wrong-sigh.mp3']
+  OK   right pick -> preview voice
+  OK   right pick -> twinkle + chime sfx
+  OK   right pick -> success voice
+HELPING TIME
+  OK   question voice
+  OK   'ready' pop sfx
+  OK   ambience loop
+  OK   wrong pick -> cue  ['/assets/audio/wrong/wrong-sigh.mp3']
+  OK   wrong pick -> spoken 'Try the other picture' (first miss)
+  OK   2nd wrong pick -> different cue + retry-pop sfx  ['/assets/audio/wrong/wrong-oh.mp3']
+  OK   right pick -> preview voice
+  OK   right pick -> twinkle + chime sfx
+  OK   right pick -> success voice
+BEDTIME
+  OK   question voice
+  OK   'ready' pop sfx
+  OK   ambience loop
+  OK   wrong pick -> cue  ['/assets/audio/wrong/wrong-oh.mp3']
+  OK   wrong pick -> spoken 'Try the other picture' (first miss)
+  OK   2nd wrong pick -> different cue + retry-pop sfx  ['/assets/audio/wrong/wrong-sigh.mp3']
+  OK   right pick -> preview voice
+  OK   right pick -> twinkle + chime sfx
+  OK   right pick -> success voice
+END SCREEN
+  OK   celebrate sfx
+  OK   end voice
+  OK   ?wrong=mine -> 'Mine' on every wrong pick
+  OK   ?wrong=mine -> 'Mine' on every wrong pick
+FILES
+  OK   /assets/audio/ambience/bedtime.mp3  257087 bytes, 16.00s
+  OK   /assets/audio/ambience/helping.mp3  257087 bytes, 16.00s
+  OK   /assets/audio/ambience/meal.mp3  257087 bytes, 16.00s
+  OK   /assets/audio/ambience/morning.mp3  257087 bytes, 16.00s
+  OK   /assets/audio/ambience/play.mp3  257087 bytes, 16.00s
+  OK   /assets/audio/final/Bedtime-Intro-Before-we-sleep-we-make-our-dua.mp3  59393 bytes, 3.66s
+  OK   /assets/audio/final/End-MashaAllah-you-did-it-little-hero.mp3  45182 bytes, 2.75s
+  OK   /assets/audio/final/Helping-Intro-Mommy-needs-help-What-can-we-do.mp3  47690 bytes, 2.93s
+  OK   /assets/audio/final/Intro-Assalamu-alaikum-little-hero.mp3  56885 bytes, 3.48s
+  OK   /assets/audio/final/Meal-Intro-Before-we-eat-what-do-we-say.mp3  39331 bytes, 2.40s
+  OK   /assets/audio/final/Morning-Intro-Good-morning-little-hero-When-we-wake-up-what-do-we-say.mp3  74857 bytes, 4.62s
+  OK   /assets/audio/final/Play-Intro-Your-friend-wants-to-play-What-should-we-do.mp3  51870 bytes, 3.19s
+  OK   /assets/audio/final/Preview-Alhamdulilah.mp3  20941 bytes, 1.25s
+  OK   /assets/audio/final/Preview-Bismillah.mp3  18433 bytes, 1.10s
+  OK   /assets/audio/final/Preview-Help.mp3  18851 bytes, 1.12s
+  OK   /assets/audio/final/Preview-Share.mp3  13417 bytes, 0.78s
+  OK   /assets/audio/final/Retry-Try-the-other-picture.mp3  24702 bytes, 1.48s
+  OK   /assets/audio/final/Success-Bismillah-brings-barakah.mp3  31390 bytes, 1.91s
+  OK   /assets/audio/final/Success-Helping-is-from-good-character.mp3  48108 bytes, 2.95s
+  OK   /assets/audio/final/Success-MashaAllah-Allah-loves-when-we-remember-Him.mp3  58139 bytes, 3.58s
+  OK   /assets/audio/final/Success-Sharing-makes-hearts-happy.mp3  32643 bytes, 1.99s
+  OK   /assets/audio/final/Success-Sleep-peacefully-little-hero.mp3  36405 bytes, 2.22s
+  OK   /assets/audio/final/card-pop.mp3  3804 bytes, 0.17s
+  OK   /assets/audio/final/celebrate.mp3  39331 bytes, 2.40s
+  OK   /assets/audio/final/retry-pop.mp3  10492 bytes, 0.60s
+  OK   /assets/audio/final/success-chime.mp3  21776 bytes, 1.30s
+  OK   /assets/audio/final/twinkle.mp3  17179 bytes, 1.00s
+  OK   /assets/audio/final/ui-tap.mp3  2550 bytes, 0.09s
+  OK   /assets/audio/final/ui-whoosh.mp3  9238 bytes, 0.50s
+  OK   /assets/audio/nasheed-bg.mp3  768672 bytes, 96.00s
+  OK   /assets/audio/wrong/wrong-boop.mp3  10492 bytes, 0.60s
+  OK   /assets/audio/wrong/wrong-mine.mp3  6312 bytes, 0.33s
+  OK   /assets/audio/wrong/wrong-oh.mp3  12163 bytes, 0.68s
+  OK   /assets/audio/wrong/wrong-sigh.mp3  14253 bytes, 0.82s
+PAGE ERRORS: []
+RESULT: PASS

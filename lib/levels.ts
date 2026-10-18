@@ -1,4 +1,5 @@
-import { AUDIO, IMG } from "@/lib/media";
+import { AUDIO, IMG, WRONG } from "@/lib/media";
+import { WRONG_PER_MOMENT } from "@/lib/wrongCues";
 
 export type LevelChoice = {
   image: string;
@@ -6,6 +7,8 @@ export type LevelChoice = {
   correct: boolean;
   /** Neutral picture description — must not reveal which answer is right. */
   label: string;
+  /** CSS object-position for the square portrait crop (keeps the child in frame). */
+  focus?: string;
 };
 
 export type LevelData = {
@@ -18,6 +21,11 @@ export type LevelData = {
   successNarration: string;
   successCaption: string;
   choices: [LevelChoice, LevelChoice];
+  /**
+   * Default wrong-pick cues for this moment. EDIT THEM IN lib/wrongCues.ts (one table, with
+   * examples); Level.tsx reads resolveWrongCues() so the URL override ?wrong=mine|soft works too.
+   */
+  wrongCues: readonly string[];
 };
 
 export const levels: LevelData[] = [
@@ -29,6 +37,7 @@ export const levels: LevelData[] = [
     narration: AUDIO.narrationMorning,
     successNarration: AUDIO.successNarrationMorning,
     successCaption: "MashaAllah — remembering Allah is beautiful.",
+    wrongCues: WRONG_PER_MOMENT.morning,
     choices: [
       {
         image: IMG.morningGood,
@@ -38,9 +47,10 @@ export const levels: LevelData[] = [
       },
       {
         image: IMG.morningNeutral,
-        audio: AUDIO.previewMine,
+        audio: WRONG.oh,
         correct: false,
         label: "Hiding under the blanket",
+        focus: "50% 72%",
       },
     ],
   },
@@ -52,6 +62,7 @@ export const levels: LevelData[] = [
     narration: AUDIO.narrationPlay,
     successNarration: AUDIO.successNarrationPlay,
     successCaption: "Sharing makes hearts happy.",
+    wrongCues: WRONG_PER_MOMENT.play,
     choices: [
       {
         image: IMG.playGood,
@@ -61,9 +72,10 @@ export const levels: LevelData[] = [
       },
       {
         image: IMG.playNeutral,
-        audio: AUDIO.previewMine,
+        audio: WRONG.mine,
         correct: false,
         label: "Keeping the toys",
+        focus: "50% 35%",
       },
     ],
   },
@@ -75,6 +87,7 @@ export const levels: LevelData[] = [
     narration: AUDIO.narrationMeal,
     successNarration: AUDIO.successNarrationMeal,
     successCaption: "Bismillah brings barakah.",
+    wrongCues: WRONG_PER_MOMENT.meal,
     choices: [
       {
         image: IMG.mealGood,
@@ -84,7 +97,7 @@ export const levels: LevelData[] = [
       },
       {
         image: IMG.mealNeutral,
-        audio: AUDIO.previewMine,
+        audio: WRONG.boop,
         correct: false,
         label: "Reaching for food quickly",
       },
@@ -94,22 +107,24 @@ export const levels: LevelData[] = [
     id: "helping",
     name: "Helping Time",
     scene: IMG.helpingScene,
-    prompt: "Someone needs help. What can we do?",
+    prompt: "Mommy needs help. What can we do?",
     narration: AUDIO.narrationHelping,
     successNarration: AUDIO.successNarrationHelping,
     successCaption: "Helping is from good character.",
+    wrongCues: WRONG_PER_MOMENT.helping,
     choices: [
       {
         image: IMG.helpingGood,
-        audio: AUDIO.previewShare,
+        audio: AUDIO.previewHelp,
         correct: true,
         label: "Helping with the chore",
       },
       {
         image: IMG.helpingNeutral,
-        audio: AUDIO.previewMine,
+        audio: WRONG.sigh,
         correct: false,
         label: "Playing alone nearby",
+        focus: "50% 55%",
       },
     ],
   },
@@ -121,6 +136,7 @@ export const levels: LevelData[] = [
     narration: AUDIO.narrationBed,
     successNarration: AUDIO.successNarrationBedtime,
     successCaption: "Sleep peacefully, little hero.",
+    wrongCues: WRONG_PER_MOMENT.bedtime,
     choices: [
       {
         image: IMG.bedtimeGood,
@@ -130,9 +146,10 @@ export const levels: LevelData[] = [
       },
       {
         image: IMG.bedtimeNeutral,
-        audio: AUDIO.previewMine,
+        audio: WRONG.oh,
         correct: false,
         label: "Jumping on the bed",
+        focus: "50% 22%",
       },
     ],
   },
