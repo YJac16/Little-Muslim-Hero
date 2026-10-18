@@ -1,4 +1,4 @@
-import { AUDIO, IMG } from "@/lib/media";
+import { AUDIO, IMG, WRONG } from "@/lib/media";
 
 export type LevelChoice = {
   image: string;
@@ -20,8 +20,14 @@ export type LevelData = {
   successNarration: string;
   successCaption: string;
   choices: [LevelChoice, LevelChoice];
-  /** Optional per-moment override. Default = AUDIO.wrongCue (one file for every wrong pick). */
-  wrongCue?: string;
+  /**
+   * Gentle cues for a WRONG pick in this moment, in play order: the 1st wrong pick plays
+   * wrongCues[0], the 2nd wrongCues[1], ... then it loops (never the same cue twice in a row).
+   * Files live in public/assets/audio/wrong/ (see WRONG in lib/media.ts).
+   * "Mine" is only first at Play Time, where the word matches the picture; to use "Mine"
+   * everywhere just put WRONG.mine first in every list.
+   */
+  wrongCues: readonly string[];
 };
 
 export const levels: LevelData[] = [
@@ -33,6 +39,7 @@ export const levels: LevelData[] = [
     narration: AUDIO.narrationMorning,
     successNarration: AUDIO.successNarrationMorning,
     successCaption: "MashaAllah — remembering Allah is beautiful.",
+    wrongCues: [WRONG.oh, WRONG.boop, WRONG.sigh],
     choices: [
       {
         image: IMG.morningGood,
@@ -42,7 +49,7 @@ export const levels: LevelData[] = [
       },
       {
         image: IMG.morningNeutral,
-        audio: AUDIO.wrongCue,
+        audio: WRONG.oh,
         correct: false,
         label: "Hiding under the blanket",
         focus: "50% 72%",
@@ -57,6 +64,7 @@ export const levels: LevelData[] = [
     narration: AUDIO.narrationPlay,
     successNarration: AUDIO.successNarrationPlay,
     successCaption: "Sharing makes hearts happy.",
+    wrongCues: [WRONG.mine, WRONG.boop, WRONG.oh, WRONG.sigh],
     choices: [
       {
         image: IMG.playGood,
@@ -66,7 +74,7 @@ export const levels: LevelData[] = [
       },
       {
         image: IMG.playNeutral,
-        audio: AUDIO.wrongCue,
+        audio: WRONG.mine,
         correct: false,
         label: "Keeping the toys",
         focus: "50% 35%",
@@ -81,6 +89,7 @@ export const levels: LevelData[] = [
     narration: AUDIO.narrationMeal,
     successNarration: AUDIO.successNarrationMeal,
     successCaption: "Bismillah brings barakah.",
+    wrongCues: [WRONG.boop, WRONG.sigh, WRONG.oh],
     choices: [
       {
         image: IMG.mealGood,
@@ -90,7 +99,7 @@ export const levels: LevelData[] = [
       },
       {
         image: IMG.mealNeutral,
-        audio: AUDIO.wrongCue,
+        audio: WRONG.boop,
         correct: false,
         label: "Reaching for food quickly",
       },
@@ -104,6 +113,7 @@ export const levels: LevelData[] = [
     narration: AUDIO.narrationHelping,
     successNarration: AUDIO.successNarrationHelping,
     successCaption: "Helping is from good character.",
+    wrongCues: [WRONG.sigh, WRONG.oh, WRONG.boop],
     choices: [
       {
         image: IMG.helpingGood,
@@ -113,7 +123,7 @@ export const levels: LevelData[] = [
       },
       {
         image: IMG.helpingNeutral,
-        audio: AUDIO.wrongCue,
+        audio: WRONG.sigh,
         correct: false,
         label: "Playing alone nearby",
         focus: "50% 55%",
@@ -128,6 +138,7 @@ export const levels: LevelData[] = [
     narration: AUDIO.narrationBed,
     successNarration: AUDIO.successNarrationBedtime,
     successCaption: "Sleep peacefully, little hero.",
+    wrongCues: [WRONG.oh, WRONG.sigh, WRONG.boop],
     choices: [
       {
         image: IMG.bedtimeGood,
@@ -137,7 +148,7 @@ export const levels: LevelData[] = [
       },
       {
         image: IMG.bedtimeNeutral,
-        audio: AUDIO.wrongCue,
+        audio: WRONG.oh,
         correct: false,
         label: "Jumping on the bed",
         focus: "50% 22%",

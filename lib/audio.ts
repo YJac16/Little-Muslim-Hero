@@ -101,6 +101,22 @@ export function playUrl(
   });
 }
 
+/** Create + load clips ahead of time (no playback) so the first tap has no lag. */
+export function preloadUrls(srcs: readonly string[]) {
+  if (typeof window === "undefined") return;
+  for (const src of srcs) {
+    if (cache.has(src)) continue;
+    const audio = new Audio(src);
+    audio.preload = "auto";
+    cache.set(src, audio);
+    try {
+      audio.load();
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
 export function stopUrl(src: string) {
   const audio = cache.get(src);
   if (audio) {

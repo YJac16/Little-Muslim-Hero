@@ -11,7 +11,7 @@ def bell(freq,dur,vol=0.5):
 def save(name,x):
     x=x/np.max(np.abs(x))*0.7
     sf.write(f"/tmp/{name}.wav",x,SR)
-    subprocess.run(["ffmpeg","-y","-v","error","-i",f"/tmp/{name}.wav","-ac","1","-b:a","96k",f"../public/assets/audio/sfx/{name}.mp3"],check=True)
+    subprocess.run(["ffmpeg","-y","-v","error","-i",f"/tmp/{name}.wav","-ac","1","-b:a","96k",f"src/{name}.mp3"],check=True)
 # card-pop: soft bubble pop, pitch rising sine 0.14s
 t=np.arange(int(0.14*SR))/SR
 f=380+900*t/0.14

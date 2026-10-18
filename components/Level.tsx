@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { ChoiceButton } from "@/components/ChoiceButton";
-import { playUrl, stopAll, stopUrl } from "@/lib/audio";
+import { playUrl, preloadUrls, stopAll, stopUrl } from "@/lib/audio";
 import { Burst } from "@/components/Burst";
 import type { LevelData } from "@/lib/levels";
 import { AUDIO, IMG } from "@/lib/media";
@@ -103,6 +103,8 @@ export function Level({
 
     let cancelled = false;
     const intro = introRef.current;
+    // Warm the wrong-answer cues so the first wrong tap answers instantly.
+    preloadUrls(level.wrongCues);
 
     const run = async () => {
       if (soundRef.current) {
@@ -129,7 +131,7 @@ export function Level({
       stopUrl(level.successNarration);
       stopUrl(level.choices[0].audio);
       stopUrl(level.choices[1].audio);
-      stopUrl(level.wrongCue ?? AUDIO.wrongCue);
+      for (const cue of level.wrongCues) stopUrl(cue);
       stopUrl(AUDIO.retryVoice);
     };
   }, [level]);
@@ -198,15 +200,17 @@ export function Level({
         return;
       }
 
-      // Wrong pick: quick, kind "Mine" cue EVERY time (single swappable file),
-      // a soft sway on the tapped card. Taps re-open as soon as "Mine" ends; the
-      // spoken hint plays over the pulse on the other picture (first miss only).
+      // Wrong pick: a short, kind cue on EVERY wrong tap in every moment (set in
+      // level.wrongCues, files in public/assets/audio/wrong/), plus a soft sway on
+      // the tapped card. Taps re-open as soon as the cue ends; the spoken hint plays
+      // over the pulse on the other picture (first miss only).
       wrongCountRef.current += 1;
+      const cue = level.wrongCues[(wrongCountRef.current - 1) % level.wrongCues.length];
       setPhase("retry");
       setHintPulse(false);
       setSelectedWrongIndex(index);
       setShakeWrong(true);
-      await playUrl(level.wrongCue ?? AUDIO.wrongCue, soundEnabled, 0.95);
+      await playUrl(cue, soundEnabled, 0.95);
       if (completedRef.current) return;
       setShakeWrong(false);
       setSelectedWrongIndex(null);
