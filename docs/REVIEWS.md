@@ -14,3 +14,8 @@ Reviewed from screenshots and frame strips plus a text description of the audio 
 *Scored as if the original narrator voice replaces the four placeholder lines. Reviewer's placeholder penalty: about -1.2 on Audio (about -0.2 overall).
 
 **9.0 was not reached** after the 4-round limit. Reviewer's remaining items after round 4: keep "Try again" up until the pulse ends; landscape art looks small and the 1/5 counter should sit on the art; shorten crossfade ghosting; small text and greyer desktop end screen; replay depth (a second interaction type or a collectible). Reviewer's view of what 9.0 needs beyond code: friend/sharing art, more content variety, a real narrator, Islamic-content review of duas, and observed play with children aged 3-6.
+
+## Round 5 (audio-only change: wrong-answer cues for every moment + loudness matching)
+Reviewer: Claude (same method; cannot hear audio, scored from design + test evidence). Reply verbatim in `docs/reviews/claude-round-5.md`.
+Fun 7.5, Clarity 8.1, Animation 7.2, Audio 7.6, Access/mobile 7.5, Bugs/polish 7.5, **OVERALL 7.6** (R4 was 7.5). Placeholder-voice penalty -0.5 separately (effective 7.1 with the current TTS). **9.0 not reached.**
+Reviewer did not have its own per-category R4 numbers in that chat, so the category deltas are not comparable. Open items: replace the 4 placeholder voice lines (incl. "Try the other picture", the most repeated), listen for clicks at the synthesized cue note onsets (spectrogram shows vertical lines; not heard by us), trim the tail of wrong-mine, test on real iOS/Android phones (audio unlock, latency, overlapping rapid taps), larger tap targets. Cannot be judged without ears: how the cues actually sound.
