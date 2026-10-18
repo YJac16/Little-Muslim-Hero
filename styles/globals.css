@@ -337,7 +337,7 @@ body::after {
 .burst-burst .burst-piece {
   left: 50%;
   top: 55%;
-  animation: burstOut 1.6s cubic-bezier(0.17, 0.84, 0.32, 1) var(--delay) both;
+  animation: burstOut 2.2s cubic-bezier(0.17, 0.84, 0.32, 1) var(--delay) both;
 }
 .burst-fall .burst-piece {
   left: var(--left);
@@ -578,5 +578,47 @@ body::after {
   }
   .level-side .choice-grid button {
     max-height: calc((100dvh - 9rem) / 2) !important;
+  }
+}
+
+/* Scene reacts to a right pick: crossfade to the chosen picture. */
+.scene-reveal {
+  animation: sceneReveal 0.9s ease-out both;
+}
+@keyframes sceneReveal {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Gentle "look here" pulse for a stuck child. */
+.choice-hint {
+  animation: choiceHint 1.4s ease-in-out 3;
+}
+@keyframes choiceHint {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 211, 107, 0);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 0 10px rgba(255, 211, 107, 0.55);
+  }
+}
+
+/* Portrait phones: bigger, squarer picture cards (art centre stays visible). */
+@media (max-width: 640px) and (orientation: portrait) {
+  .choice-card {
+    aspect-ratio: 1 / 1;
+    max-height: none !important;
+  }
+  .choice-img {
+    object-fit: cover !important;
   }
 }

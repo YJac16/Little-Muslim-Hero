@@ -17,6 +17,8 @@ type LevelProps = {
   totalLevels: number;
   /** Greeting played once before the first question (after Start). */
   introVoice?: string;
+  /** Show the two pictures in swapped order (answer position varies). */
+  flip?: boolean;
   onComplete: () => void;
 };
 
@@ -57,6 +59,7 @@ export function Level({
   levelIndex,
   totalLevels,
   introVoice,
+  flip = false,
   onComplete,
 }: LevelProps) {
   const id = useId();
@@ -67,6 +70,9 @@ export function Level({
     null,
   );
   const [burstKey, setBurstKey] = useState(0);
+  const [hintPulse, setHintPulse] = useState(false);
+  const [wonIndex, setWonIndex] = useState<number | null>(null);
+  const hintsRef = useRef(0);
   const completedRef = useRef(false);
   const successTimerRef = useRef<number | null>(null);
   const phaseRef = useRef<Phase>("narration");
@@ -80,6 +86,9 @@ export function Level({
   useEffect(() => {
     completedRef.current = false;
     wrongCountRef.current = 0;
+    hintsRef.current = 0;
+    setHintPulse(false);
+    setWonIndex(null);
     setPhase("narration");
     setShakeWrong(false);
     setHighlightCorrect(false);
@@ -113,7 +122,7 @@ export function Level({
       stopUrl(level.successNarration);
       stopUrl(level.choices[0].audio);
       stopUrl(level.choices[1].audio);
-      stopUrl(AUDIO.wrongCue);
+      stopUrl(level.wrongCue ?? AUDIO.wrongCue);
       stopUrl(AUDIO.retryVoice);
     };
   }, [level]);
@@ -122,6 +131,25 @@ export function Level({
   useEffect(() => {
     if (!soundEnabled) stopAll();
   }, [soundEnabled]);
+
+  // Stuck-child help: after 2 wrong picks or ~12 s of waiting, repeat the
+  // question once and softly pulse the right picture (max 2 prompts per moment).
+  useEffect(() => {
+    if (phase !== "ready" || hintsRef.current >= 2) return;
+    const afterWrong = wrongCountRef.current >= 2 && hintsRef.current === 0;
+    const id = window.setTimeout(
+      () => {
+        if (phaseRef.current !== "ready" || completedRef.current) return;
+        hintsRef.current += 1;
+        setHintPulse(true);
+        stopUrl(level.narration);
+        void playUrl(level.narration, soundRef.current, 1);
+        window.setTimeout(() => setHintPulse(false), 4200);
+      },
+      afterWrong ? 700 : 12_000,
+    );
+    return () => window.clearTimeout(id);
+  }, [phase, level]);
 
   const hearAgain = useCallback(async () => {
     const p = phaseRef.current;
@@ -147,6 +175,8 @@ export function Level({
         setHighlightCorrect(true);
         setSelectedWrongIndex(null);
         setBurstKey((k) => k + 1);
+        setWonIndex(index);
+        setHintPulse(false);
         void (async () => {
           await playUrl(choice.audio, soundEnabled, 0.95);
           void playUrl(AUDIO.twinkle, soundEnabled, 0.7, { duck: false });
@@ -166,7 +196,7 @@ export function Level({
       setPhase("retry");
       setSelectedWrongIndex(index);
       setShakeWrong(true);
-      await playUrl(AUDIO.wrongCue, soundEnabled, 0.95);
+      await playUrl(level.wrongCue ?? AUDIO.wrongCue, soundEnabled, 0.95);
       if (wrongCountRef.current === 1) {
         await playUrl(AUDIO.retryVoice, soundEnabled, 0.95);
       } else {
@@ -225,10 +255,22 @@ export function Level({
             src={level.scene}
             alt=""
             fill
-            className="scene-kenburns object-cover object-center"
+            className="scene-kenburns object-cover object-[center_30%]"
             sizes="(max-width: 1024px) 100vw, 960px"
             priority
           />
+
+          {wonIndex !== null && (
+            <div className="scene-reveal pointer-events-none absolute inset-0">
+              <Image
+                src={level.choices[wonIndex].image}
+                alt=""
+                fill
+                className="object-cover object-[center_30%]"
+                sizes="(max-width: 1024px) 100vw, 960px"
+              />
+            </div>
+          )}
 
           <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-2.5 sm:p-3">
             <div className="rounded-full bg-black/45 px-3.5 py-1.5 backdrop-blur-md">
@@ -330,10 +372,16 @@ export function Level({
               <svg
                 viewBox="0 0 24 24"
                 className="h-7 w-7"
-                fill="currentColor"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 aria-hidden
               >
-                <path d="M3 10v4h3.2L11 18.8V5.2L6.2 10H3zm11.5 2a3.5 3.5 0 0 0-1.8-3.1v6.2A3.5 3.5 0 0 0 14.5 12zm0-7.2v2.1a5.6 5.6 0 0 1 0 10.2v2.1a7.7 7.7 0 0 0 0-14.4z" />
+                <path d="M4 12a8 8 0 1 0 2.7-6" />
+                <path d="M4 4v4.5h4.5" />
+                <path d="M10.5 9.5v5l4-2.5z" fill="currentColor" stroke="none" />
               </svg>
             </button>
           )}
@@ -344,30 +392,22 @@ export function Level({
         {/* Choice tray — large taps, aspect matches landscape art */}
         <div className="choice-tray level-side relative shrink-0">
           <div className="choice-grid grid grid-cols-2 items-center gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-            <ChoiceButton
-              image={level.choices[0].image}
-              label={level.choices[0].label}
-              isCorrect={level.choices[0].correct}
-              disabled={choiceLocked && !waiting}
-              waiting={waiting}
-              isHighlighted={highlightCorrect && level.choices[0].correct}
-              shouldShake={shakeWrong && selectedWrongIndex === 0}
-              order={0}
-              bob={phase === "ready"}
-              onResolved={(ok) => void handleResolved(0, ok)}
-            />
-            <ChoiceButton
-              image={level.choices[1].image}
-              label={level.choices[1].label}
-              isCorrect={level.choices[1].correct}
-              disabled={choiceLocked && !waiting}
-              waiting={waiting}
-              isHighlighted={highlightCorrect && level.choices[1].correct}
-              shouldShake={shakeWrong && selectedWrongIndex === 1}
-              order={1}
-              bob={phase === "ready"}
-              onResolved={(ok) => void handleResolved(1, ok)}
-            />
+            {(flip ? [1, 0] : [0, 1]).map((idx, pos) => (
+              <ChoiceButton
+                key={idx}
+                image={level.choices[idx].image}
+                label={level.choices[idx].label}
+                isCorrect={level.choices[idx].correct}
+                disabled={choiceLocked && !waiting}
+                waiting={waiting}
+                isHighlighted={highlightCorrect && level.choices[idx].correct}
+                shouldShake={shakeWrong && selectedWrongIndex === idx}
+                order={pos}
+                bob={phase === "ready"}
+                hint={hintPulse && level.choices[idx].correct}
+                onResolved={(ok) => void handleResolved(idx, ok)}
+              />
+            ))}
           </div>
         </div>
       </div>

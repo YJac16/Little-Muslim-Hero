@@ -18,6 +18,8 @@ export type LevelData = {
   successNarration: string;
   successCaption: string;
   choices: [LevelChoice, LevelChoice];
+  /** Optional per-moment override. Default = AUDIO.wrongCue (one file for every wrong pick). */
+  wrongCue?: string;
 };
 
 export const levels: LevelData[] = [

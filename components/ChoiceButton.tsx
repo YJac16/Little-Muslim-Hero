@@ -15,6 +15,8 @@ export type ChoiceButtonProps = {
   order?: number;
   /** Gentle idle bob while it is the child's turn. */
   bob?: boolean;
+  /** Pulse to help a stuck child. */
+  hint?: boolean;
   onResolved: (correct: boolean) => void;
 };
 
@@ -46,6 +48,7 @@ export function ChoiceButton({
   shouldShake,
   order = 0,
   bob = false,
+  hint = false,
   onResolved,
 }: ChoiceButtonProps) {
   const [isActing, setIsActing] = useState(false);
@@ -74,14 +77,14 @@ export function ChoiceButton({
       className={[
         /* Match landscape choice art (~4:3). Avoid h-full stretch → tall
            portrait frames that object-cover then side-crops. */
-        "group relative aspect-[4/3] w-full max-h-[min(42vh,20rem)] select-none overflow-hidden rounded-[28px] border-[3px] border-white bg-[#fff8e7] shadow-softBlue transition-all duration-200 touch-manipulation",
+        "choice-card group relative aspect-[4/3] w-full max-h-[min(42vh,20rem)] select-none overflow-hidden rounded-[28px] border-[3px] border-white bg-[#fff8e7] shadow-softBlue transition-all duration-200 touch-manipulation",
         "sm:max-h-[min(46vh,24rem)]",
         "active:scale-[0.97]",
         isHighlighted
           ? "choice-correct border-[#ffd36b] ring-4 ring-[#ffd36b]/80 ring-offset-2 ring-offset-cream shadow-glow"
           : "",
         shouldShake ? "choice-soft-no border-[#ef8b48]/70" : "",
-        bob && !locked ? "choice-bob" : "",
+        hint && !locked ? "choice-hint" : bob && !locked ? "choice-bob" : "",
         waiting
           ? "cursor-wait"
           : locked
@@ -96,7 +99,7 @@ export function ChoiceButton({
         alt=""
         fill
         className={[
-          "object-contain object-center transition-transform duration-200 group-active:scale-[0.98]",
+          "choice-img object-contain object-center transition-transform duration-200 group-active:scale-[0.98]",
           waiting ? "brightness-90" : "",
         ]
           .filter(Boolean)
