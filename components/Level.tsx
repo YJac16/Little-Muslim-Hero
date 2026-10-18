@@ -241,13 +241,13 @@ export function Level({
           {emotionSrc && (
             <div
               key={emotionSrc}
-              className="mascot-pop pointer-events-none absolute bottom-2 right-2 h-16 w-16 sm:h-20 sm:w-20"
+              className="mascot-pop pointer-events-none absolute bottom-2.5 right-2.5 h-20 w-20 overflow-hidden rounded-full bg-white/70 shadow-glow ring-4 ring-white/90 sm:h-24 sm:w-24"
             >
               <Image
                 src={emotionSrc}
                 alt=""
                 fill
-                className="object-contain drop-shadow-lg"
+                className="object-cover object-[center_25%]"
               />
             </div>
           )}

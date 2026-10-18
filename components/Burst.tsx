@@ -39,12 +39,12 @@ export function Burst({
 }) {
   const items = Array.from({ length: count }, (_, i) => {
     const angle = (i / count) * Math.PI * 2 + (i % 3) * 0.2;
-    const dist = 70 + ((i * 37) % 90);
+    const dist = 110 + ((i * 37) % 110);
     return {
       key: i,
       crescent: i % 4 === 3,
       color: COLORS[i % COLORS.length],
-      size: 16 + ((i * 7) % 18),
+      size: 24 + ((i * 7) % 24),
       style: {
         "--dx": `${Math.cos(angle) * dist}px`,
         "--dy": `${Math.sin(angle) * dist - 20}px`,

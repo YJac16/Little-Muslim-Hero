@@ -337,7 +337,7 @@ body::after {
 .burst-burst .burst-piece {
   left: 50%;
   top: 55%;
-  animation: burstOut 1.25s cubic-bezier(0.17, 0.84, 0.32, 1) var(--delay) both;
+  animation: burstOut 1.6s cubic-bezier(0.17, 0.84, 0.32, 1) var(--delay) both;
 }
 .burst-fall .burst-piece {
   left: var(--left);
